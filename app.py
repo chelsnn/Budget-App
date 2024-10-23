@@ -11,9 +11,12 @@ def expenses():
     return render_template('expenses.html')
 
 @app.route('/homepage')
-def expenses():
+def homepage():
     return render_template('homepage.html')
 
+@app.route('/budget')
+def budget():
+    return render_template('budget.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
