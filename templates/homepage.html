@@ -3,8 +3,7 @@
 <html>
   <head>
     <title>StudentSpender</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
-
+    
     <div class="Homepage"></div>
     <div class="menubar"></div>
     <style></style>
@@ -13,15 +12,8 @@
 
   <body>
     
-    <nav>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Expenses</a></li>
-        <li><a href="#">Budget</a></li>
-        <li><a href="#">Advice</a></li>
-        <li><a href="#">Settings</a></li>
-      </ul>
-    </nav>
+    {% include 'navbar.html' %}
+   
     <h1>Welcome Back, "your name"</h1>
 
     <div class="boxes">
