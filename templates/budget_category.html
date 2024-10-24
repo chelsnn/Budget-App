@@ -1,0 +1,50 @@
+<html>
+
+<head>
+    <title>StudentSpender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
+</head>
+
+<body>
+    <!-- include navigation bar -->
+    {% include 'navbar.html' %}
+
+    <!-- display text describing webpage purpose -->
+    <h1>Select Your Spending Categories!</h1>
+    <h3>This determines how we will categorize your spending in your budget plan.</h3>
+
+    <!-- form for selecting spending categories -->
+    <form action="/budget_category_submit" method="POST">
+        <label>
+            <input type="checkbox" name="categories" value="accommodation">
+            Accommodation
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" name="categories" value="food">
+            Food
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" name="categories" value="transportation">
+            Transportation
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" name="categories" value="entertainment">
+            Entertainment
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" name="categories" value="shopping">
+            Shopping
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" name="categories" value="miscellaneous">
+            Miscellaneous
+        </label>
+        <br>
+        <button type="submit">Generate Spending Plan</button>
+    </form>
+</html>
