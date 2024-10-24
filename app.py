@@ -25,6 +25,10 @@ def homepage():
 def budget():
     return render_template('budget.html')
 
+@app.route('/advice')
+def advice():
+    return render_template('advice.html')
+
 # route to handle form submission
 @app.route('/submit', methods=['POST'])
 def submit_program_details():
