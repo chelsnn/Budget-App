@@ -1,16 +1,17 @@
-<html>
+<!DOCTYPE html>
 
-<head>
-    <title>StudentSpender</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
-</head>
+<html lang="en">
+    <head>
+        <title>StudentSpender</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
+    </head>
 
-<body>
-    <!-- include navigation bar -->
-    {% include 'navbar.html' %}
+    <body class="body-text">
+        <!-- include navigation bar -->
+        {% include 'navbar.html' %}
 
-    <!-- display text describing webpage purpose -->
-    <h1>View Your Budget!</h1>
-    <h3>Here's how we recommend you spend your money during your time abroad.</h3>
-
+        <!-- display text describing webpage purpose -->
+        <h1>View Your Budget!</h1>
+        <h3>Here's how we recommend you spend your money during your time abroad.</h3>
+    </body>
 </html>
