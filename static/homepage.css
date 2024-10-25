@@ -188,15 +188,29 @@ form button {
 .checkbox-group {
     display: flex; 
     flex-direction: column; 
-    gap: 10px; 
+    align-items: flex-start; 
 }
 
 .checkbox-group label {
     display: flex; 
     align-items: left; 
-    margin-bottom: 10px
+    margin-bottom:10px
 }
 
 .checkbox-group input[type="checkbox"] {
-    margin-right: 10px;     
+    margin-right: 10px;  
+    vertical-align: middle;   
+}
+
+.category-option {
+    display: flex;
+    align-items: center;    
+    margin-bottom: 15px;    
+    text-align: center;     
+}
+
+.icon {
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
 }
