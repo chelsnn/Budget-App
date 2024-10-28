@@ -55,10 +55,7 @@ def edit_profile():
     return render_template('edit_profile.html', data=submitted_data, selected=selected)
 
 
-@app.route('/homepage')
-def homepage():
-def homepage():
-    return render_template('homepage.html')
+
 
 @app.route('/budget')
 def budget():
