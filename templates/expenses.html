@@ -1,7 +1,148 @@
+<!DOCTYPE html>
 <html>
-<head><title>Budget App</title></head>
+<head>
+    <title>Budget App</title>
+    <style>
+        /* Navbar styling */
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px 20px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        /* Main body and content styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .content {
+            margin-top: 80px; /* Offset to prevent content overlap with navbar */
+            padding: 20px;
+        }
+        h1 {
+            color: #007bff;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .expense-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+        .expense-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .expense-item img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            object-fit: contain;
+        }
+        .expense-info {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        .expense-details {
+            display: flex;
+            flex-direction: column;
+        }
+        .expense-title {
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+        .expense-category {
+            color: #888;
+            font-size: 0.85em;
+        }
+        .expense-amount {
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
 <body>
-    {% include 'navbar.html' %}
-    <h1>Expenses</h1>
+    <!-- Navbar -->
+    <div class="navbar">
+        {% include 'navbar.html' %}
+    </div>
+
+    <!-- Main content -->
+    <div class="content">
+        <h1>Expenses</h1>
+        <a href="{{ url_for('addExpense') }}">Add Expense</a>
+
+       
+        <h1>Today</h1>
+        <ul class="expense-list">
+            <li class="expense-item">
+                <div class="expense-info">
+                    <img src="travel.png" alt="Travel Icon">
+                    <div class="expense-details">
+                        <p class="expense-title">Flight to Spain</p>
+                        <p class="expense-category">Travel</p>
+                    </div>
+                </div>
+                <div class="expense-amount">$200</div>
+            </li>
+            <li class="expense-item">
+                <div class="expense-info">
+                    <img src="travel.png" alt="Travel Icon">
+                    <div class="expense-details">
+                        <p class="expense-title">Flight to London</p>
+                        <p class="expense-category">Travel</p>
+                    </div>
+                </div>
+                <div class="expense-amount">$134</div>
+            </li>
+            <li class="expense-item">
+                <div class="expense-info">
+                    <img src="food.png" alt="Food Icon">
+                    <div class="expense-details">
+                        <p class="expense-title">Taco</p>
+                        <p class="expense-category">Food</p>
+                    </div>
+                </div>
+                <div class="expense-amount">$12</div>
+            </li>
+            <li class="expense-item">
+                <div class="expense-info">
+                    <img src="shopping.png" alt="Shopping Icon">
+                    <div class="expense-details">
+                        <p class="expense-title">Jacket</p>
+                        <p class="expense-category">Shopping</p>
+                    </div>
+                </div>
+                <div class="expense-amount">$39</div>
+            </li>
+            <li class="expense-item">
+                <div class="expense-info">
+                    <img src="entertainment.png" alt="Entertainment Icon">
+                    <div class="expense-details">
+                        <p class="expense-title">Movie</p>
+                        <p class="expense-category">Entertainment</p>
+                    </div>
+                </div>
+                <div class="expense-amount">$20</div>
+            </li>
+        </ul>
+    </div>
 </body>
 </html>
+
+        
