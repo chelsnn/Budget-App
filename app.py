@@ -24,6 +24,11 @@ def addExpense():
         date = request.form.get('date')
         notes = request.form.get('notes')
 
+        conn = get_db_connection()
+        conn.execute('INSERT INTO expenses (amount, expenseName, category, date, notes), VALUES (?,?)', (amount, expenseName, category, date, notes))
+        conn.commit()
+        conn.close()
+        
         return redirect(url_for('expenses'))
     return render_template('addExpense.html')
 
