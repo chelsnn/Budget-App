@@ -26,16 +26,22 @@ selected = ['Accommodation', 'Food', 'Travel']
 percent_left = 75
 
 @app.route('/')
+
 @app.route('/homepage')
 def homepage():
     print("First Name:", submitted_data['first_name'])  
     print("Last Name:", submitted_data['last_name'])  
     return render_template('homepage.html', percent_left=percent_left, first_name=submitted_data['first_name'], last_name=submitted_data['last_name'])
 
+def home():
+    return render_template('homepage.html')
+
+
 @app.route('/expenses')
 def expenses():
     return render_template('expenses.html')
 
+ 
 
 
 
@@ -46,6 +52,15 @@ def profile():
 @app.route('/edit_profile')
 def edit_profile():
     return render_template('edit_profile.html', data=submitted_data, selected=selected)
+
+
+@app.route('/homepage')
+def homepage():
+    return render_template('homepage.html')
+
+@app.route('/budget')
+def budget():
+    return render_template('budget.html')
 
 
 if __name__ == '__main__':
