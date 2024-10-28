@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for
+
+from flask import Flask, render_template, request, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -55,6 +56,7 @@ def edit_profile():
     return render_template('edit_profile.html', data=submitted_data, selected=selected)
 
 
+=======
 # @app.route('/homepage')
 # def homepage():
 #     return render_template('homepage.html')
@@ -76,11 +78,37 @@ def addExpense():
         return redirect(url_for('expenses'))
     return render_template('addExpense.html')
 
+
 @app.route('/budget')
 def budget():
     return render_template('budget.html')
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        # Add authentication logic here
+        # if username == 'admin' and password == 'password':  # Dummy check
+        #     return redirect(url_for('homepage'))
+        # else:
+        #     return "Invalid credentials, please try again."
+    return render_template('login.html')
+
+#Dummy code for sign up page
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        fullname = request.form['fullname']
+        emailaddress = request.form['emailaddress']
+        username = request.form['username']
+        password = request.form['password']
+        homepage = request.form['homepage']
+        # Add authentication logic here
+    return render_template('signup.html')
+
 
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True, host='127.0.0.1', port=5000)
 
