@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 
@@ -55,6 +56,27 @@ def edit_profile():
     return render_template('edit_profile.html', data=submitted_data, selected=selected)
 
 
+=======
+# @app.route('/homepage')
+# def homepage():
+#     return render_template('homepage.html')
+    
+@app.route('/addExpense', methods=['GET', 'POST'])
+def addExpense():
+    if request.method == 'POST':
+        amount = request.form.get('amount')
+        expenseName = request.form.get('expenseName')
+        category = request.form.get('categories')
+        date = request.form.get('date')
+        notes = request.form.get('notes')
+
+        # conn = get_db_connection()
+        # conn.execute('INSERT INTO expenses (amount, expenseName, category, date, notes), VALUES (?,?)', (amount, expenseName, category, date, notes))
+        # conn.commit()
+        # conn.close()
+        
+        return redirect(url_for('expenses'))
+    return render_template('addExpense.html')
 
 
 @app.route('/budget')
@@ -89,3 +111,4 @@ def signup():
 
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=5000)
+
