@@ -1,4 +1,33 @@
 <html>
+
+  <head>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='homepage.css') }}"
+    />
+  </head>
+  <body>
+    <nav>
+      <ul class="navlinks">
+        <li class="nav-item">
+          <a href="#"><strong>Advice</strong></a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ url_for('profile') }}"><strong>Profile</strong></a>
+        </li>
+        <li class="nav-item">
+          <a href="#"><strong>Budget</strong></a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ url_for('expenses') }}"><strong>Expenses</strong></a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ url_for('homepage') }}"><strong>Home</strong></a>
+        </li>
+      </ul>
+    </nav>
+  </body>
+
     <head>
         <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
 
@@ -15,4 +44,5 @@
         </nav>
     </body>
     
+
 </html>
