@@ -5,34 +5,223 @@
     padding: 0;
     text-decoration: none;
     font-family: 'Inter', sans-serif;
+     
+    
 }
+
+.modhead {
+    padding-top: 10px;
+    
+}
+
+h1 {
+    padding-top: 20px;
+    color: #1fa2b7;
+    padding-bottom: 30px;
+}
+
+/*Profile page CSS start*/
+.prof_body {
+   
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+
+}
+.prof {
+    display: block;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    
+    padding-top: 10px;
+    margin-top: 10px;
+    color: #1fa2b7;
+    text-align: center;
+    
+
+}
+.title {
+    
+    text-align: center;
+    color: #1fa2b7;
+    
+    
+}
+
+.pfp {
+    display: flex;
+    justify-content: center;
+    
+    width: 100%;
+    height: 80px;
+    border-radius: 50%;
+   
+    color: #1fa2b7;
+    
+    margin-top: 30px auto;
+    
+}
+
+.pfp img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    overflow: hidden;
+    
+}
+
+.edit_pfp, .submit{
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #1fa2b7;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+    
+    
+
+
+}
+label {
+    margin-bottom: 10px;
+    margin-top: 20px;
+    
+    
+
+}
+.form_inputs {
+    margin-bottom: 20px;
+    padding: 8px;
+    width: 100%;
+    max-width: 300px;
+    border: 2px solid #1fa2b7;
+    background-color: white;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s;
+    color: #9e9e9e;
+
+}
+
+.forms {
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+
+.checkbox {
+    display: block;
+    margin-top: 10px;
+    padding: 10px;
+
+    margin-bottom: 10px;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/*Profile Page CSS end*/
+
+
+
+/*Nav Bar Css start*/
 
 ul li {
     list-style: none;
     display: flex;
-    float: left;
-    line-height: 100px;
+    float: right;
+    
+    
+   padding: 35px 0;
+   
 }
 
 ul {
+   
     justify-content: flex-end;
 }
 
+
 ul li a {
     display: block;
-    font-size: 14px;
+    
+    font-size: 16px;
     color: #1fa2b7;
-    padding: 0 20px;
+    padding: 5px;
+    padding-right: 30px;
+    margin-right: 25px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    border-radius: 8px;
     text-align: right;
 }
 
 nav {
+    margin-right: 25px;
+    
+    padding: 5px;
+    padding-right: 30px;
     width: 100%;
     height: 100px;
     background-color: #ffff;
     z-index: 99;
-    max-width: 1300px;
+    margin-right: 20px;
+    
 }
+.nav-links ul {
+    display: flex;
+    justify-content: flex-end;
+
+    
+  
+    
+}
+.nav-item a {
+    display: flex;
+    
+    text-decoration: none;
+    padding: 5px 15px;
+    border-radius: 20px;
+    transition: background-color 0.3s;
+    
+    
+
+
+}
+.nav-item a:hover, 
+.nav-item.active a{
+    color:#ffff;
+    background-color: #1fa2b7;
+    
+    line-height: 30px;
+   
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+
+a:visited {
+    color: #1fa2b7;
+}
+
+/*Nav Bar Css end*/
+
+
 
 .mod {
     width: 300px;
@@ -54,13 +243,14 @@ nav {
     justify-content: space-between;
 }
 
-.Budget-Bar, h1 {
+.Budget-Bar, .welc {
     color: #1fa2b7;
     text-align: center;
 }
 
 .Budget-Bar {
     padding-top: 100px;
+    
     background: #ffff;
     width: 300px;
     height: 400px;
@@ -90,7 +280,7 @@ nav {
     height: 150px;
     fill: none;
     stroke-width: 10;
-    stroke: #000;
+    stroke: #1fa2b7;
     transform: translate(5px, 5px);
     stroke-dasharray: 440;
     stroke-dashoffset: 440;
@@ -111,7 +301,7 @@ nav {
     justify-content: center;
     align-items: center;
     position: absolute;
-    color: #111;
+    color: #999;
 }
 
 .Budget-Bar .percent .num h2 span {
@@ -124,15 +314,23 @@ nav {
     letter-spacing: 1px;
 }
 
+.progress_circle {
+    fill: none;
+    
+    stroke-width: 10;
+    stroke-linecap: round;
+    stroke-dashoffset: calc(440 - (440 * {{ percent_left }} / 100));
+    transition: stroke-dashoffset 0.5s ease;
+    stroke: #1fa2b7;
+}
+
 .text {
     color: #999;
 }
 
-a:visited {
-    color: #1fa2b7;
-}
 
 body {
     background-color: #eee;
     height: 100vh;
 }
+
