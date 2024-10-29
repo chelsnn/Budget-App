@@ -1,0 +1,105 @@
+<html>
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='homepage.css') }}"
+  />
+  <head>
+    {% include 'navbar.html' %}
+    <div class="title">
+      <title>Profile</title>
+    </div>
+  </head>
+
+  <body class="prof_body">
+    <div class="prof" >
+        <h1 class="prof_head">Profile</h1>
+        <div class="pfp">
+            <img src="{{ url_for('static', filename='images/blank_pfp.jpg') }}" alt="Default Profile Pic" />
+        </div>
+        <div class="forms">
+            <form class="prof_form" action="/submit" method="POST">
+
+             <label for="first_name">First Name</label> 
+            <input class="form_inputs type="text" id="first_name" name="first_name" value="{{ data.first_name }}" ><br><br>
+
+            <label for="last_name">Last Name</label> 
+            <input class="form_inputs type="text" id="last_name" name="last_name" value="{{ data.last_name }}" ><br><br>
+
+            <label for="email">Email</label> 
+            <input class="form_inputs type="text" id="email" name="email" value="{{ data.email }}" ><br><br>
+
+            <label for="username">Username</label> 
+            <input class="form_inputs type="text" id="username" name="username" value="{{ data.username }}" ><br><br>
+
+            <label for="password">Password</label> 
+            <input class="form_inputs type="text" id="password" name="password" value="{{ data.password }}" ><br><br>
+
+            <label for="home_street">Home Street</label> 
+            <input class="form_inputs type="text" id="home_street" name="home_street" value="{{ data.home_street }}" ><br><br>
+
+            <label for="home_city">Home City</label> 
+            <input class="form_inputs type="text" id="home_city" name="home_city" value="{{ data.home_city }}" ><br><br>
+
+            <label for="home_country">Home Country</label> 
+            <input class="form_inputs type="text" id="home_country" name="home_country" value="{{ data.home_country }}" ><br><br>
+                
+            </form>   
+        </div>
+
+        <div class="spend_cats">
+            <h2 class="spend_form">Spending Categories</h2>
+            <form id="spending-categories">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="cats" value="Accommodation"
+                    {% if 'Accommodation' in selected %}checked{% endif %}>
+                        Accommodation
+                </label>
+
+
+                <label>
+                    <input type="checkbox" name="cats" value="Food"
+                    {% if 'Food' in selected %}checked{% endif %}>
+                        Food
+                </label>
+
+
+                <label>
+                    <input type="checkbox" name="cats" value="Travel"
+                    {% if 'Travel' in selected %}checked{% endif %}>
+                        Travel
+                </label>
+
+
+                <label>
+                    <input type="checkbox" name="cats" value="Entertainment"
+                    {% if 'Entertainment' in selected %}checked{% endif %}>
+                        Entertainment
+                </label>
+
+                <label>
+                    <input type="checkbox" name="cats" value="Shopping"
+                    {% if 'Shopping' in selected %}checked{% endif %}>
+                        Shopping
+                </label>
+
+                <label>
+                    <input type="checkbox" name="cats" value="Miscellaneous"
+                   {% if 'Miscellaneous' in selected %}checked{% endif %}> 
+                        Miscellaneous
+                </label>
+
+
+            </div>
+            </form>
+        </div>
+
+        <div class="submit">
+            <button class="submit" onclick="alert('Button Clicked!')">Submit Changes</button>
+
+        </div>
+
+
+  </body>
+</div>
+</html>
