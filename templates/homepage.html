@@ -23,7 +23,7 @@
         <div class="percent">
           <svg>
             <circle cx="70" cy="70" r="70"></circle>
-            <circle cx="70" cy="70" r="70" class="progress_circle" style="stroke-dashoffset: calc(440 - (440 * {{ percent_left }} / 100));"></circle>
+            <circle cx="70" cy="70" r="70" class="progress_circle" style="stroke-dashoffset: calc(440 - (440 * var(--percent-left) / 100));"></circle>
           </svg>
           <div class="num">
             <h2>{{ percent_left }}<span>%</span></h2>
