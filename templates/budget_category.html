@@ -6,49 +6,51 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
     </head>
 
-    <body class="body-text">
+    <body>
         <!-- include navigation bar -->
         {% include 'navbar.html' %}
+            
+        <div class="body-text">
+            <!-- display text describing webpage purpose -->
+            <h1>Select Your Spending Categories!</h1>
+            <h3>This determines how we will categorize your spending in your budget plan.</h3>
 
-        <!-- display text describing webpage purpose -->
-        <h1>Select Your Spending Categories!</h1>
-        <h3>This determines how we will categorize your spending in your budget plan.</h3>
-
-        <!-- form for selecting spending categories -->
-        <form action="/budget_category_submit" method="POST">
-            <div class="checkbox-group">
-                <label class="category-option">
-                    <input type="checkbox" name="categories" value="accommodation">
-                    Accommodation
-                    <img src="{{ url_for('static', filename='icons/accomodation.png') }}" alt="Accomodation Icon" class="icon">
-                </label>
-                <label class="category-option">
-                    <input type="checkbox" name="categories" value="food">
-                    Food
-                    <img src="{{ url_for('static', filename='icons/food.png') }}" alt="Food Icon" class="icon">
-                </label>
-                <label class="category-option">
-                    <input type="checkbox" name="categories" value="travel">
-                    Travel
-                    <img src="{{ url_for('static', filename='icons/travel.png') }}" alt="Travel Icon" class="icon">
-                </label>
-                <label class="category-option">
-                    <input type="checkbox" name="categories" value="entertainment">
-                    Entertainment
-                    <img src="{{ url_for('static', filename='icons/entertainment.png') }}" alt="Entertainment Icon" class="icon">
-                </label>
-                <label class="category-option">
-                    <input type="checkbox" name="categories" value="shopping">
-                    Shopping
-                    <img src="{{ url_for('static', filename='icons/shopping.png') }}" alt="Shopping Icon" class="icon">
-                </label>
-                <label class="category-option">
-                    <input type="checkbox" name="categories" value="miscellaneous">
-                    Miscellaneous
-                    <img src="{{ url_for('static', filename='icons/miscellaneous.png') }}" alt="Miscellaneous Icon" class="icon">
-                </label>
-            </div>
-            <button type="submit">Generate Spending Plan</button>
-        </form>
+            <!-- form for selecting spending categories -->
+            <form action="/budget_category_submit" method="POST">
+                <div class="checkbox-group">
+                    <label class="category-option">
+                        <input type="checkbox" name="categories" value="accommodation">
+                        Accommodation
+                        <img src="{{ url_for('static', filename='icons/accomodation.png') }}" alt="Accomodation Icon" class="icon">
+                    </label>
+                    <label class="category-option">
+                        <input type="checkbox" name="categories" value="food">
+                        Food
+                        <img src="{{ url_for('static', filename='icons/food.png') }}" alt="Food Icon" class="icon">
+                    </label>
+                    <label class="category-option">
+                        <input type="checkbox" name="categories" value="travel">
+                        Travel
+                        <img src="{{ url_for('static', filename='icons/travel.png') }}" alt="Travel Icon" class="icon">
+                    </label>
+                    <label class="category-option">
+                        <input type="checkbox" name="categories" value="entertainment">
+                        Entertainment
+                        <img src="{{ url_for('static', filename='icons/entertainment.png') }}" alt="Entertainment Icon" class="icon">
+                    </label>
+                    <label class="category-option">
+                        <input type="checkbox" name="categories" value="shopping">
+                        Shopping
+                        <img src="{{ url_for('static', filename='icons/shopping.png') }}" alt="Shopping Icon" class="icon">
+                    </label>
+                    <label class="category-option">
+                        <input type="checkbox" name="categories" value="miscellaneous">
+                        Miscellaneous
+                        <img src="{{ url_for('static', filename='icons/miscellaneous.png') }}" alt="Miscellaneous Icon" class="icon">
+                    </label>
+                </div>
+                <button type="submit">Generate Spending Plan</button>
+            </form>
+        </div>
     </body>
 </html>

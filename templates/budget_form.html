@@ -8,39 +8,42 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
     </head>
     
-    <body class="body-text">
+    <body>
         <!-- include navigation bar -->
         {% include 'navbar.html' %}
     
-        <!-- display text describing webpage purpose -->
-        <h1>Generate Your Budget Planner!</h1>
-        <h3>Use the power of AI to strategize your spending while you're abroad!</h3>
-        <h3>Simply enter a few details about your study abroad program.</h3>
+        <div class="body-text">
+            <!-- display text describing webpage purpose -->
+            <h1>Generate Your Budget Planner!</h1>
+            <h3>Use the power of AI to strategize your spending while you're abroad!</h3>
+            <h3>Simply enter a few details about your study abroad program.</h3>
     
-        <form action="/budget_form_submit" method="POST">
-            <!-- total budget input-->
-             <label for="budget">Total Budget:</label>
-             <input type="number" id="budget" name="budget" placeholder="Enter budget in USD" required>
-    
-            <!-- arrival date input -->
-             <label for="arrival_date">Arrival Date:</label>
-             <input type="date" id="arrival_date" name="arrival_date" required>
-    
-            <!-- departure date input -->
-            <label for="departure_date">Departure Date:</label>
-            <input type="date" id="departure_date" name="departure_date" required>
-    
-            <!-- city input -->
-            <label for="city">City of Your Program:</label>
-            <input type="text" id="city" name="city" placeholder="Enter city" required>
-    
-            <!-- country input -->
-            <label for="country">Country of Your Program:</label>
-            <input type="text" id="country" name="country" placeholder="Enter country" required>
-            
-    
-            <!-- submit button -->
-             <button type="submit">Next</button>
-        </form>
+            <form action="/budget_form_submit" method="POST">
+                <!-- total budget input-->
+                <label for="budget">Total Budget:</label>
+                <input type="number" id="budget" name="budget" placeholder="Enter budget in USD" required>
+        
+                <!-- arrival date input -->
+                <label for="arrival_date">Arrival Date:</label>
+                <input type="date" id="arrival_date" name="arrival_date" required>
+        
+                <!-- departure date input -->
+                <label for="departure_date">Departure Date:</label>
+                <input type="date" id="departure_date" name="departure_date" required>
+        
+                <!-- city input -->
+                <label for="city">City of Your Program:</label>
+                <input type="text" id="city" name="city" placeholder="Enter city" required>
+        
+                <!-- country input -->
+                <label for="country">Country of Your Program:</label>
+                <input type="text" id="country" name="country" placeholder="Enter country" required>
+                
+        
+                <!-- submit button -->
+                <button type="submit">Next</button>
+            </form>
+        </div>
+        
     </body>
 </html>
