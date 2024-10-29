@@ -1,20 +1,5 @@
 <html>
 
-<<<<<<< HEAD
-    </head>
-    <body>
-        <nav>
-            <ul>
-              <li><a href="{{ url_for('homepage') }}">Home</a></li>
-              <li><a href="{{ url_for('expenses') }}">Expenses</a></li>
-              <li><a href="{{ url_for('budget_form') }}">Budget</a></li>
-              <li><a href="{{ url_for('advice') }}">Advice</a></li>
-              <li><a href="#">Settings</a></li>
-            </ul>
-        </nav>
-    </body>
-    
-=======
   <head>
     <link
       rel="stylesheet"
@@ -31,7 +16,7 @@
           <a href="{{ url_for('profile') }}"><strong>Profile</strong></a>
         </li>
         <li class="nav-item">
-          <a href="#"><strong>Budget</strong></a>
+          <a href="{{ url_for('budget_form')}}"><strong>Budget</strong></a>
         </li>
         <li class="nav-item">
           <a href="{{ url_for('expenses') }}"><strong>Expenses</strong></a>
@@ -43,5 +28,4 @@
     </nav>
   </body>
 
->>>>>>> main
 </html>

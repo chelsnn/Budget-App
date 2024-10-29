@@ -318,7 +318,7 @@ a:visited {
     fill: none;
     stroke-width: 10;
     stroke-linecap: round;
-    stroke-dashoffset: calc(440 - (440 * var(--percent-left) / 100)); /* Ensure percent_left is defined as a CSS variable if dynamic */
+    stroke-dashoffset: calc(440 - (440 * var(--percent-left) / 100)); 
     transition: stroke-dashoffset 0.5s ease;
     stroke: #1fa2b7;
 }
