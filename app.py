@@ -46,7 +46,8 @@ def home():
 
 @app.route('/expenses')
 def expenses():
-    return render_template('expenses.html')
+    expenses_data = get_expenses()
+    return render_template('expenses.html', expenses=expenses_data)
 
 @app.route('/profile')
 def profile():
@@ -91,31 +92,12 @@ def add_expense():
     conn.close()
 
 
-# @app.route('/addExpenseSubmit', methods=['GET', 'POST'])
-# def addExpenseSubmit():
-#     if request.method == 'POST':
-#         # retrieve user input from form
-#         amount = request.form.get('amount')
-#         expenseName = request.form.get('expenseName')
-#         category = request.form.get('categories')
-#         date = request.form.get('date')
-#         notes = request.form.get('notes')
-#         budgetID = 1 #placeholder
-
-
-#         # insert data into sqlite
-#         conn = get_db_connection()
-#         cursor = conn.execute('INSERT INTO expenses_details (budget_id, amount, category, expenseName, notes, date) VALUES (?, ?, ?, ?, ?, ?)',
-#             (budgetID, amount, category, expenseName, notes, date))
-       
-#         conn.commit()
-#         conn.close()
-
-#         # store record ID for current session
-#         session['expenseID'] = cursor.lastrowid
-
-#         # after form submission, redirect to budget_category page
-#         return redirect(url_for('expenses'))
+def get_expenses():
+    conn = get_db_connection()
+    cursor = conn.execute('SELECT * FROM expenses_details')
+    expenses = cursor.fetchall()
+    conn.close()
+    return expenses
 
 
 @app.route('/budget')
