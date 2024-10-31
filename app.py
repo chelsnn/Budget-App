@@ -97,17 +97,6 @@ def login():
         #     return "Invalid credentials, please try again."
     return render_template('login.html')
 
-#Dummy code for sign up page
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    if request.method == 'POST':
-        fullname = request.form['fullname']
-        emailaddress = request.form['emailaddress']
-        username = request.form['username']
-        password = request.form['password']
-        homepage = request.form['homepage']
-        # Add authentication logic here
-    return render_template('signup.html')
 
 @app.route('/budget_form')
 def budget_form():
