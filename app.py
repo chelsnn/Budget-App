@@ -13,7 +13,7 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-app = Flask(__name__)
+#app = Flask(__name__)
 
 #dummy profile data
 submitted_data = {
@@ -34,7 +34,41 @@ selected = ['Accommodation', 'Food', 'Travel']
 
 percent_left = 75
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        # Add authentication logic here
+        if username and password:
+            return redirect(url_for('homepage'))
+
+    return render_template('login.html')
+
+@app.route('/#', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        fullname = request.form['fullname']
+        emailaddress = request.form['emailaddress']
+        username = request.form['username']
+        password = request.form['password']
+        homepage = request.form['homepage']
+        # existing_user = User.query.filter_by(username=username).first()
+        # if existing_user:
+        #     return "User already exists."
+
+        # # Add the new user to the database
+        # new_user = User(username=username, password=password)
+        # db.session.add(new_user)
+        # db.session.commit()
+        # url not working right now 
+        if username and password and fullname and homepage and emailaddress:
+            return redirect(url_for('homepage'))
+        # Add authentication logic here
+    return render_template('login.html')
+
+
 
 @app.route('/homepage')
 def homepage():
@@ -84,18 +118,19 @@ def addExpense():
 def budget():
     return render_template('budget.html')
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+# @app.route('/login', methods=['GET', 'POST'])
+# def login():
+#     if request.method == 'POST':
+#         username = request.form['username']
+#         password = request.form['password']
 
-        # Add authentication logic here
-        # if username == 'admin' and password == 'password':  # Dummy check
-        #     return redirect(url_for('homepage'))
-        # else:
-        #     return "Invalid credentials, please try again."
-    return render_template('login.html')
+#         # Add authentication logic here
+#         # if username == 'admin' and password == 'password':  # Dummy check
+#         #     return redirect(url_for('homepage'))
+#         # else:
+#         #     return "Invalid credentials, please try again."
+#     return render_template('login.html')
+
 
 
 @app.route('/budget_form')
