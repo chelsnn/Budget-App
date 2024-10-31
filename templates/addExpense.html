@@ -5,33 +5,33 @@
     <h1>Add Expense</h1>
    <form action="/addExpense" style="display: flex; flex-direction: column; align-items: center;" method="POST">
         <label id="amount">Amount</label>
-        <input type="number" id="amountInput"></input>
+        <input type="number" name="amount"></input>
         <br></br>
 
         <label id="expenseName">Name of Expense:</label>
-        <input type="text"></input>
+        <input type="text" name="expenseName"></input>
         <br></br>
 
         <label id="categories">Choose a Category:</label>
         <br></br>
 
-        <input type="radio" id="food" name="categories" value="food" required>
+        <input type="radio" id="food" name="category" value="food" required>
         <label for="food">Food</label><br>
         
-        <input type="radio" id="travel" name="categories" value="travel">
+        <input type="radio" id="travel" name="category" value="travel">
         <label for="transport">Travel</label><br>
         
-        <input type="radio" id="entertainment" name="categories" value="entertainment">
+        <input type="radio" id="entertainment" name="category" value="entertainment">
         <label for="entertainment">Entertainment</label><br>
 
-        <input type="radio" id="shopping" name="categories" value="shopping">
+        <input type="radio" id="shopping" name="category" value="shopping">
         <label for="shopping">Shopping</label><br>
   
         <label id="date">Select Date</label>
-        <input type="date" id="date">
+        <input type="date" name="date">
         <br></br>
         <label id="notes">Notes</label>
-        <input type="text"></input>
+        <input type="text" name="notes"></input>
         <br></br>
         <button type="submit">Add</button>
         <br></br>

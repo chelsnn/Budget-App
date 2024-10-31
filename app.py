@@ -13,8 +13,6 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-app = Flask(__name__)
-
 #dummy profile data
 submitted_data = {
     'first_name': 'Jane',
