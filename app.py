@@ -9,7 +9,7 @@ app.secret_key = 'my_secret_key_for_testing_in_development_server'
 
 # create connection to sqlite database
 def get_db_connection():
-    conn = sqlite3.connect('database.db') 
+    conn = sqlite3.connect('testDB.db') 
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -65,11 +65,8 @@ def edit_profile():
 @app.route('/addExpense', methods=['GET', 'POST'])
 def addExpense():
     if request.method == 'POST':
-        amount = request.form.get('amount')
-        expenseName = request.form.get('expenseName')
-        category = request.form.get('categories')
-        date = request.form.get('date')
-        notes = request.form.get('notes')
+        
+        add_expense()
 
         # conn = get_db_connection()
         # conn.execute('INSERT INTO expenses (amount, expenseName, category, date, notes), VALUES (?,?)', (amount, expenseName, category, date, notes))
@@ -78,6 +75,49 @@ def addExpense():
         
         return redirect(url_for('expenses'))
     return render_template('addExpense.html')
+
+def add_expense():
+    conn = get_db_connection()
+    amount = request.form.get('amount')
+    expenseName = request.form.get('expenseName')
+    category = request.form.get('category')
+    date = request.form.get('date')
+    notes = request.form.get('notes')
+    budgetID = 1
+
+    conn.execute('''
+        INSERT INTO expenses_details (budget_id, amount, expenseName, category, date, notes)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ''', (budgetID, amount, expenseName, category, date, notes))
+    conn.commit()
+    conn.close()
+
+
+# @app.route('/addExpenseSubmit', methods=['GET', 'POST'])
+# def addExpenseSubmit():
+#     if request.method == 'POST':
+#         # retrieve user input from form
+#         amount = request.form.get('amount')
+#         expenseName = request.form.get('expenseName')
+#         category = request.form.get('categories')
+#         date = request.form.get('date')
+#         notes = request.form.get('notes')
+#         budgetID = 1 #placeholder
+
+
+#         # insert data into sqlite
+#         conn = get_db_connection()
+#         cursor = conn.execute('INSERT INTO expenses_details (budget_id, amount, category, expenseName, notes, date) VALUES (?, ?, ?, ?, ?, ?)',
+#             (budgetID, amount, category, expenseName, notes, date))
+       
+#         conn.commit()
+#         conn.close()
+
+#         # store record ID for current session
+#         session['expenseID'] = cursor.lastrowid
+
+#         # after form submission, redirect to budget_category page
+#         return redirect(url_for('expenses'))
 
 
 @app.route('/budget')
@@ -164,7 +204,7 @@ def budget_category_submit():
         return redirect(url_for('budget_view'))
 
 # create database to store user data
-def create_db():
+def create_tables():
     conn = get_db_connection()
     conn.execute('''
         CREATE TABLE IF NOT EXISTS budget_details (
@@ -175,6 +215,19 @@ def create_db():
             city TEXT NOT NULL,
             country TEXT NOT NULL,
             categories TEXT NOT NULL
+        );
+    ''')
+
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS expenses_details (
+            expenseID INTEGER PRIMARY KEY AUTOINCREMENT,
+            budget_id INTEGER NOT NULL,
+            amount TEXT NOT NULL,
+            category TEXT NOT NULL,
+            expenseName TEXT NOT NULL,
+            notes TEXT,
+            date TEXT NOT NULL,
+            FOREIGN KEY (budget_id) REFERENCES budget_details(id)
         );
     ''')
     conn.commit()
@@ -189,6 +242,6 @@ def advice():
     return render_template('advice.html')
 
 if __name__ == '__main__':
-    create_db()
+    create_tables()
     app.run(debug=True, host='127.0.0.1', port=5000)
 
