@@ -14,6 +14,17 @@
             <!-- display text describing webpage purpose -->
             <h1>View Your Budget!</h1>
             <h3>Here's how we recommend you spend your money during your time abroad.</h3>
+
+            <h3>To recap, here is the information you submitted:</h3>
+            <p>Budget: {{ budget }}</p>
+            <p>Arrival Date: {{ arrival_date }}</p>
+            <p>Departure Date: {{ departure_date }}</p>
+            <p>City: {{ city }}</p>
+            <p>Country: {{ country }}</p>
+            <p>Categories: {{ categories }}</p>
+        
+            <h2>Here is your personalized spending planner, powered by AI:</h2>
+            <p>{{ api_output }}</p>        
         </div>
     </body>
 </html>
