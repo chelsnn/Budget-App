@@ -12,6 +12,7 @@
         {% include 'navbar.html' %}
     
         <div class="body-text">
+<<<<<<< HEAD
             <!-- display budget details -->
             <h1>Your Budget Plan</h1>
             <h2>To recap, here is the budget info you have provided:</h2>
@@ -34,6 +35,22 @@
             {% else %}
                 <p>No AI-generated budget available.</p>
             {% endif %}
+=======
+            <!-- display text describing webpage purpose -->
+            <h1>View Your Budget!</h1>
+            <h3>Here's how we recommend you spend your money during your time abroad.</h3>
+
+            <h3>To recap, here is the information you submitted:</h3>
+            <p>Budget: {{ budget }}</p>
+            <p>Arrival Date: {{ arrival_date }}</p>
+            <p>Departure Date: {{ departure_date }}</p>
+            <p>City: {{ city }}</p>
+            <p>Country: {{ country }}</p>
+            <p>Categories: {{ categories }}</p>
+        
+            <h2>Here is your personalized spending planner, powered by AI:</h2>
+            <p>{{ api_output }}</p>        
+>>>>>>> 7be1817 (Implemented OpenAI API, set up to produce output for budget_view based on user input)
         </div>
     </body>
 </html>
