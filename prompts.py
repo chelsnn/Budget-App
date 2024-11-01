@@ -2,10 +2,13 @@
 system_message = """
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     You are a budgeting and personal finance advisor. Help undergraduate students planning to study abroad create realistic 
     two-week spending plans based on their total budget and specified spending categories, ensuring they can sustain their 
     finances throughout the program.
 =======
+=======
+>>>>>>> 3e990c3 (Implemented OpenAI API, set up to produce output for budget_view based on user input)
     You are an expert budget setter and personal finances advisor.
     Your primary role is to assist undergraduate university students who are about to begin a study abroad program with 
     strategizing how they will spend their money throughout the duration throughout their program. 
@@ -14,16 +17,20 @@ system_message = """
     It is important that this spending plan is realistic and accurate, as the student would want to avoid following a budget plan 
     that would lead them to lose all their money while being in a foreign country, away from their family and without a source of
     income. 
+<<<<<<< HEAD
 >>>>>>> 7be1817 (Implemented OpenAI API, set up to produce output for budget_view based on user input)
 =======
     You are a budgeting and personal finance advisor. Help undergraduate students planning to study abroad create realistic 
     two-week spending plans based on their total budget and specified spending categories, ensuring they can sustain their 
     finances throughout the program.
 >>>>>>> eb87074 (Save changes before merging with main)
+=======
+>>>>>>> 3e990c3 (Implemented OpenAI API, set up to produce output for budget_view based on user input)
 """
 
 # generate a prompt based on input obtained from budget_form table
 def generate_budget_prompt(budget, arrival_date, departure_date, city, country, categories):
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -41,6 +48,8 @@ def generate_budget_prompt(budget, arrival_date, departure_date, city, country, 
     """
     
 =======
+=======
+>>>>>>> 3e990c3 (Implemented OpenAI API, set up to produce output for budget_view based on user input)
     prompt = """
         I am an undergraduate university student who is about to begin a study abroad program located in {city}, {country}.
         I am really excited to begin my program, though I have a couple reservations about how I will manage my money throughout
@@ -50,9 +59,12 @@ def generate_budget_prompt(budget, arrival_date, departure_date, city, country, 
         previously listed categories, broken down into two week spending periods. 
         My program begins on {arrival_date} and ends on {departure_date}.
     """
+<<<<<<< HEAD
 >>>>>>> 7be1817 (Implemented OpenAI API, set up to produce output for budget_view based on user input)
 =======
     """
     
 >>>>>>> eb87074 (Save changes before merging with main)
+=======
+>>>>>>> 3e990c3 (Implemented OpenAI API, set up to produce output for budget_view based on user input)
     return prompt
