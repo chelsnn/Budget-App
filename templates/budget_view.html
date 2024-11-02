@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <title>StudentSpender</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
+    </head>
+
+    <body>
+        <!-- include navigation bar -->
+        {% include 'navbar.html' %}
+
+        <div class="body-text">
+            <!-- display text describing webpage purpose -->
+            <h1>View Your Budget!</h1>
+            <h3>Here's how we recommend you spend your money during your time abroad.</h3>
+        </div>
+    </body>
+</html>
