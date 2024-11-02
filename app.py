@@ -15,6 +15,23 @@ def get_db_connection():
 
 #app = Flask(__name__)
 
+def create_users_table():
+    conn = get_db_connection()
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            fullname TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            username TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL,
+            address TEXT
+        );
+    ''')
+    conn.commit()
+    conn.close()
+
+# Call this function when the app starts
+create_users_table()
 #dummy profile data
 submitted_data = {
     'first_name': 'Jane',
@@ -40,33 +57,66 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        # Add authentication logic here
-        if username and password:
+        conn = get_db_connection()
+        user = conn.execute(
+            'SELECT * FROM users WHERE username = ? AND password = ?',
+            (username, password)
+        ).fetchone()
+        conn.close()
+
+        if user:
+            session['user_id'] = user['id']
             return redirect(url_for('homepage'))
+        else:
+            return render_template('login.html', error="Invalid credentials")
 
     return render_template('login.html')
 
-@app.route('/#', methods=['GET', 'POST'])
+
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
         fullname = request.form['fullname']
-        emailaddress = request.form['emailaddress']
+        email = request.form['email']
         username = request.form['username']
         password = request.form['password']
-        homepage = request.form['homepage']
-        # existing_user = User.query.filter_by(username=username).first()
-        # if existing_user:
-        #     return "User already exists."
+        address = request.form['address']
 
-        # # Add the new user to the database
-        # new_user = User(username=username, password=password)
-        # db.session.add(new_user)
-        # db.session.commit()
-        # url not working right now 
-        if username and password and fullname and homepage and emailaddress:
-            return redirect(url_for('homepage'))
-        # Add authentication logic here
-    return render_template('login.html')
+        conn = get_db_connection()
+        try:
+            conn.execute(
+                'INSERT INTO users (fullname, email, username, password, address) VALUES (?, ?, ?, ?, ?)',
+                (fullname, email, username, password, address)
+            )
+            conn.commit()
+            return redirect(url_for('login'))  # Redirect to login after signup
+        except sqlite3.IntegrityError:
+            error_message = "Username or email already exists."
+            return render_template('login.html', error=error_message, show_signup=True)
+        finally:
+            conn.close()
+
+    return render_template('signup.html')
+
+@app.route('/forgotPassword', methods=['GET', 'POST'])
+def forgotPassword():
+    if request.method == 'POST':
+        username = request.form['username']
+        new_password = request.form['new_password']
+        confirm_password = request.form['confirm_password']
+        
+        if new_password != confirm_password:
+            error = "Passwords do not match."
+            return render_template('login.html', error=error, show_forgot_password=True)
+        
+        conn = get_db_connection()
+        conn.execute('UPDATE users SET password = ? WHERE username = ?', (new_password, username))
+        conn.commit()
+        conn.close()
+        
+        return redirect(url_for('login'))
+    
+    return render_template('forgotPassword.html')
 
 
 
