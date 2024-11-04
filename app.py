@@ -12,6 +12,7 @@ from openai import OpenAI
 from dotenv import load_dotenv, find_dotenv
 
 app = Flask(__name__)
+load_dotenv()
 
 # set keys
 load_dotenv()
