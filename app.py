@@ -1,6 +1,9 @@
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
+import requests
+
+
 
 app = Flask(__name__)
 
@@ -48,8 +51,9 @@ submitted_data = {
 selected = ['Accommodation', 'Food', 'Travel']
 
 #dummy budget data
-
 percent_left = 75
+
+
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -261,6 +265,33 @@ def budget_view():
 @app.route('/advice')
 def advice():
     return render_template('advice.html')
+
+@app.route('/currency_converter', methods=['POST'])
+def currency_converter():
+    base_currency = request.form['base_currency'].upper()
+    target_currency = request.form['target_currency'].upper()
+    amount = float(request.form['amount'])
+    print(f"Received: {base_currency}, {target_currency}, Amount: {amount}")
+
+    api_key = '***REMOVED***'  
+    url = f'https://v6.exchangerate-api.com/v6/{api_key}/pair/{base_currency}/{target_currency}'
+
+    response = requests.get(url)
+    converted_amount = None
+    error_message = None
+
+    if response.status_code == 200:
+        data = response.json()
+        print("API RESPONSE:", data)
+        if data['result'] == "success":
+            exchange_rate = data['conversion_rate']
+            converted_amount = amount * exchange_rate
+        else: error_message = data.get('error-type', 'Unknown error occurred.')
+    else: 
+        error_message = f'API request failed with status code {response.status_code}'
+
+    return render_template('homepage.html', converted_amount=converted_amount, amount=amount, 
+                           base_currency=base_currency, target_currency=target_currency, error_message=error_message, first_name=submitted_data['first_name'], last_name=submitted_data['last_name'], percent_left=percent_left)
 
 if __name__ == '__main__':
     create_db()
