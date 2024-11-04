@@ -152,10 +152,55 @@ def expenses():
 
 @app.route('/profile')
 def profile():
-    return render_template('profile.html', data=submitted_data, selected=selected)
+    conn = get_db_connection()
+    user = conn.execute(
+        'SELECT fullname, email, username, password, address FROM users WHERE id = ?',
+        (session['user_id'],)
+    ).fetchone()
+    conn.close()
+
+    if user:
+        # Split fullname into first and last names
+        full_name = user['fullname'].split(' ', 1)
+        profile_data = {
+            'fullname':full_name,
+            'email': user['email'],
+            'username': user['username'],
+            'password': user['password'],
+            'home_country': user['address'],  # Assuming address is being used as home_country
+        }
+
+        return render_template('profile.html', data=profile_data, selected=selected)
+    else:
+        return redirect(url_for('login'))  # Redirect if user not found
 
 @app.route('/edit_profile')
 def edit_profile():
+    if request.method == 'POST':
+        # Capture the form data
+        fullname = request.form['fullname']
+        email = request.form['email']
+        username = request.form['username']
+        password = request.form['password']
+        home_country = request.form['address']
+
+        # Update the submitted_data dictionary with new values
+        submitted_data['fullname'] = fullname
+        submitted_data['email'] = email
+        submitted_data['username'] = username
+        submitted_data['password'] = password
+        submitted_data['address'] = home_country
+
+        # You would typically also update this in the database
+        conn = get_db_connection()
+        conn.execute(
+            'UPDATE users SET fullname = ?, email = ?, username = ?, password = ?, address = ? WHERE id = ?',
+            (f"{fullname}", email, username, password, home_country, session['user_id'])
+        )
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for('homepage'))  # Redirect to profile page after submission
     return render_template('edit_profile.html', data=submitted_data, selected=selected)
 
 # @app.route('/homepage')
