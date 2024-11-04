@@ -80,7 +80,7 @@ def signup():
         email = request.form['email']
         username = request.form['username']
         password = request.form['password']
-        address = request.form['address']
+        address = request.form['country']
 
         conn = get_db_connection()
         try:
