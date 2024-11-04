@@ -91,7 +91,25 @@
         <h1>Today</h1>
 
         <ul class="expense-list">
+
             {% for expense in expenses %}
+            <li class="expense-item">
+                <div class="expense-info">
+                    {% if expense['category'] == 'travel' %}
+                        <img src="travel.png" alt="Travel Icon">
+                    {% elif expense['category'] == 'food' %}
+                        <img src="food.png" alt="Food Icon">
+                    {% elif expense['category'] == 'shopping' %}
+                        <img src="shopping.png" alt="Shopping Icon">
+                    {% elif expense['category'] == 'entertainment' %}
+                        <img src="entertainment.png" alt="Entertainment Icon">
+                    {% endif %}
+                </div>
+            </li>
+                
+            {% endfor %}
+
+            <!-- {% for expense in expenses %}
             <li class="expense-item">
                 <div class="expense-info">
                     {{{expense['category']}} == "travel"} && <img src="travel.png" alt="Travel Icon">}
@@ -106,7 +124,7 @@
                 </div>
                 <div class="expense-amount">${{expense['amount']}}</div>
             </li>
-            {% endfor %}
+            {% endfor %} -->
         </ul>
 
         <!-- <ul class="expense-list">
