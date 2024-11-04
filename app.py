@@ -2,6 +2,8 @@ import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from collections import defaultdict
+
 
 app = Flask(__name__)
 
@@ -48,9 +50,14 @@ def home():
 @app.route('/expenses')
 def expenses():
     today = datetime.today().strftime('%Y-%m-%d')
+    # expenses_data = get_expenses()
 
     expenses_data = sorted(get_expenses(), key=lambda x: datetime.strptime(x['date'], '%Y-%m-%d'), reverse=True)
-    return render_template('expenses.html', expenses=expenses_data, today=today)
+    grouped_expenses = defaultdict(list)
+    for expense in expenses_data:
+        date = expense['date']
+        grouped_expenses[date].append(expense)
+    return render_template('expenses.html', expenses=grouped_expenses, today=today)
 
 @app.route('/profile')
 def profile():
