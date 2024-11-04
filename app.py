@@ -12,12 +12,12 @@ from openai import OpenAI
 from dotenv import load_dotenv, find_dotenv
 
 app = Flask(__name__)
+load_dotenv()
 
 # set Flask key
-app.secret_key = os.urandom(12).hex()
+app.secret_key = os.getenv("FLASK_KEY")
 
 # set OpenAI API key
-load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # set OpenAI preferences
