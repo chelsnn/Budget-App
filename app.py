@@ -50,9 +50,9 @@ def home():
 @app.route('/expenses')
 def expenses():
     today = datetime.today().strftime('%Y-%m-%d')
-    # expenses_data = get_expenses()
-
-    expenses_data = sorted(get_expenses(), key=lambda x: datetime.strptime(x['date'], '%Y-%m-%d'), reverse=True)
+    expenses_data = sorted(get_expenses(), key=lambda x: datetime.strptime(x['date'], '%Y-%m-%d'), reverse=True) #sorts expenses in backwards order to ensure display is in order
+    
+    #creates a dictionary with dates as keys to display expenses by date
     grouped_expenses = defaultdict(list)
     for expense in expenses_data:
         date = expense['date']
