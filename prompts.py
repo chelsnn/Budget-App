@@ -1,6 +1,7 @@
 # provide context to AI system
 system_message = """
 <<<<<<< HEAD
+<<<<<<< HEAD
     You are a budgeting and personal finance advisor. Help undergraduate students planning to study abroad create realistic 
     two-week spending plans based on their total budget and specified spending categories, ensuring they can sustain their 
     finances throughout the program.
@@ -14,11 +15,19 @@ system_message = """
     that would lead them to lose all their money while being in a foreign country, away from their family and without a source of
     income. 
 >>>>>>> 7be1817 (Implemented OpenAI API, set up to produce output for budget_view based on user input)
+=======
+    You are a budgeting and personal finance advisor. Help undergraduate students planning to study abroad create realistic 
+    two-week spending plans based on their total budget and specified spending categories, ensuring they can sustain their 
+    finances throughout the program.
+>>>>>>> eb87074 (Save changes before merging with main)
 """
 
 # generate a prompt based on input obtained from budget_form table
 def generate_budget_prompt(budget, arrival_date, departure_date, city, country, categories):
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> eb87074 (Save changes before merging with main)
     prompt = f"""
         I'm an undergraduate student starting a study abroad program in {city}, {country}. I’m concerned about managing 
         my budget of {budget} across these categories: {categories}. 
@@ -28,6 +37,7 @@ def generate_budget_prompt(budget, arrival_date, departure_date, city, country, 
         three paragraphs.
 
         My program runs from {arrival_date} to {departure_date}.
+<<<<<<< HEAD
     """
     
 =======
@@ -41,4 +51,8 @@ def generate_budget_prompt(budget, arrival_date, departure_date, city, country, 
         My program begins on {arrival_date} and ends on {departure_date}.
     """
 >>>>>>> 7be1817 (Implemented OpenAI API, set up to produce output for budget_view based on user input)
+=======
+    """
+    
+>>>>>>> eb87074 (Save changes before merging with main)
     return prompt
