@@ -1,5 +1,7 @@
 import sqlite3
 import os
+import openai
+# import requests
 import prompts
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
@@ -11,20 +13,18 @@ from dotenv import load_dotenv, find_dotenv
 
 app = Flask(__name__)
 
-# load the .env file and set OpenAI API secret key
-_ = load_dotenv(find_dotenv())
-client = OpenAI(
-    api_key = os.environ.get('OPENAI_API_KEY')
-)
+# set Flask key
+app.secret_key = os.urandom(12).hex()
 
-# set AI model preferences
-model =  "gpt-4o-mini"
-temperature = 0.3 
-max_tokens = 200
-topic = "undergraduate student study abroad budgeting advice"
+# set OpenAI API key
+load_dotenv()
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# generate and set Flask secret key
-app.secret_key = os.urandom(24).hex()
+# set OpenAI preferences
+client = openai  
+temperature = 0.7  
+max_tokens = 500  
+model = "gpt-4o-mini"
 
 # create connection to sqlite database
 def get_db_connection():
@@ -67,8 +67,6 @@ selected = ['Accommodation', 'Food', 'Travel']
 
 #dummy budget data
 percent_left = 75
-
-
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -288,8 +286,6 @@ def budget():
 #         #     return "Invalid credentials, please try again."
 #     return render_template('login.html')
 
-
-
 @app.route('/budget_form')
 def budget_form():
     return render_template('budget_form.html')
@@ -306,7 +302,7 @@ def budget_form_submit():
 
         # insert data into sqlite
         conn = get_db_connection()
-        cursor = conn.execute('INSERT INTO budget_details (budget, arrival_date, departure_date, city, country, categories, output) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        cursor = conn.execute('INSERT INTO budget_details (budget, arrival_date, departure_date, city, country, categories, api_output) VALUES (?, ?, ?, ?, ?, ?, ?)',
             (budget, arrival_date, departure_date, city, country, 'temp', 'temp'))
         conn.commit()
         conn.close()
@@ -324,56 +320,67 @@ def budget_category():
 @app.route('/budget_category_submit', methods=['GET', 'POST'])
 def budget_category_submit():
     if request.method == 'POST':
-        # retrieve selected categories from form
+        # retrieve selected categories from the form
         selected_categories = request.form.getlist('categories')
 
-        # concatenate categories
+        # concatenate categories into a string
         categories_str = ', '.join(selected_categories)
 
-        budget_id = session.get('budget_id') 
+        # retrieve the budget_id from the session
+        budget_id = session.get('budget_id')
+
         if budget_id:
             conn = get_db_connection()
 
-            # update value in categories column for current row
+            # update the categories in the database for the current row
             conn.execute(
                 'UPDATE budget_details SET categories = ? WHERE id = ?',
                 (categories_str, budget_id)
             )
 
-            # retrieve values in all columns and store in variables
+            # retrieve values from the database and store them in variables
             budget_row = conn.execute(
                 'SELECT budget, arrival_date, departure_date, city, country FROM budget_details WHERE id = ?',
                 (budget_id,)
             ).fetchone()
-            budget, arrival_date, departure_date, city, country = budget_row
 
-            # generate prompt using variables
-            prompt = prompts.generate_budget_prompt(budget, arrival_date, departure_date, city, country, categories_str)
+            if budget_row:
+                budget, arrival_date, departure_date, city, country = budget_row
 
-            # call OpenAI API with generated prompt
-            response = client.chat.completions.create(
-                model = model,
-                messages = [
-                    {"role": "system", "content": prompts.system_message},
-                    {"role": "user", "content": prompt} 
-                ],
-                temperature = temperature,
-                max_tokens = max_tokens
-            )
-            api_output = response.choices[0].message
+                # generate prompt using the variables
+                prompt = prompts.generate_budget_prompt(budget, arrival_date, departure_date, city, country, categories_str)
 
-            # store API output message in new column in table
-            conn.execute(
-                'UPDATE budget_details SET api_output = ? WHERE id = ?',
-                (api_output, budget_id)
-            )
+                # call OpenAI API with the generated prompt
+                response = client.chat.completions.create(
+                    model = model,
+                    messages=[
+                        {"role": "system", "content": prompts.system_message},
+                        {"role": "user", "content": prompt}
+                    ],
+                    temperature = temperature,
+                    max_tokens = max_tokens
+                )
 
-            conn.commit()
-            conn.close()
+                # retrieve the API output as plain text
+                api_output = response.choices[0].message.content
 
-        # after form submission, redirect to budget_view page
+                # debugging output: print the API response
+                print("API Output:", api_output)
+
+                # store the API output message in the database
+                conn.execute(
+                    'UPDATE budget_details SET api_output = ? WHERE id = ?',
+                    (api_output, budget_id)
+                )
+
+                conn.commit()
+                conn.close()
+            else:
+                print("Error: No data found for budget_id:", budget_id)
+
+        # after form submission, redirect to the budget_view page
         return redirect(url_for('budget_view'))
-
+    
 # create database to store user data
 def create_tables():
     conn = get_db_connection()
@@ -407,24 +414,30 @@ def create_tables():
 
 @app.route('/budget_view')
 def budget_view():
-
-    budget_id = session.get('budget_id') 
+    budget_id = session.get('budget_id')
     if budget_id:
         conn = get_db_connection()
 
         # retrieve budget details along with API output
-        budget_details = conn.execute(
+        budget_row = conn.execute(
             'SELECT budget, arrival_date, departure_date, city, country, categories, api_output FROM budget_details WHERE id = ?',
             (budget_id,)
         ).fetchone()
-
-        conn.commit()
-        conn.close()
-
-    budget, arrival_date, departure_date, city, country, categories, api_output = budget_details
         
-    return render_template('budget_view.html', budget = budget, arrival_date = arrival_date, departure_date = departure_date, 
-        city = city, country = country, categories = categories, api_output = api_output)
+        if budget_row:
+            budget, arrival_date, departure_date, city, country, categories, api_output = budget_row
+            # pass data to the template
+            return render_template('budget_view.html', budget=budget, arrival_date=arrival_date, 
+                                   departure_date=departure_date, city=city, country=country, categories=categories,
+                                   api_output=api_output)
+        else:
+            # Handle the case where no budget was found for the budget_id
+            return "Budget not found.", 404  # You can return a more user-friendly template or message here
+        
+        conn.close()
+    
+    # Handle the case where no budget_id was found in the session
+    return "No budget ID in session.", 400  # You can return a more user-friendly template or message here
 
 @app.route('/advice')
 def advice():
