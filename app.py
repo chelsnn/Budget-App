@@ -453,9 +453,9 @@ def budget_view():
     # Handle the case where no budget_id was found in the session
     return "No budget ID in session.", 400  # You can return a more user-friendly template or message here
 
-@app.route('/advice')
-def advice():
-    return render_template('advice.html')
+@app.route('/log_out')
+def log_out():
+    return render_template('login.html')
 
 @app.route('/currency_converter', methods=['POST'])
 def currency_converter():
