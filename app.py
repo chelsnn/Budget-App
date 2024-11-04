@@ -1,6 +1,7 @@
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -46,8 +47,10 @@ def home():
 
 @app.route('/expenses')
 def expenses():
-    expenses_data = get_expenses()
-    return render_template('expenses.html', expenses=expenses_data)
+    today = datetime.today().strftime('%Y-%m-%d')
+
+    expenses_data = sorted(get_expenses(), key=lambda x: datetime.strptime(x['date'], '%Y-%m-%d'), reverse=True)
+    return render_template('expenses.html', expenses=expenses_data, today=today)
 
 @app.route('/profile')
 def profile():
@@ -83,6 +86,8 @@ def add_expense():
     date = request.form.get('date')
     notes = request.form.get('notes')
     budgetID = 1
+
+    
 
     conn.execute('''
         INSERT INTO expenses_details (budget_id, amount, expenseName, category, date, notes)
