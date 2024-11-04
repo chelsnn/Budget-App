@@ -126,9 +126,21 @@ def forgotPassword():
 
 @app.route('/homepage')
 def homepage():
-    print("First Name:", submitted_data['first_name'])  
-    print("Last Name:", submitted_data['last_name'])  
-    return render_template('homepage.html', percent_left=percent_left, first_name=submitted_data['first_name'], last_name=submitted_data['last_name'])
+    conn = get_db_connection()
+    user_id = session.get('user_id')
+    user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
+    conn.close()
+
+    if user:
+        full_name = user['fullname']
+        
+    else:
+        full_name = "Guest"
+        
+
+    
+    return render_template('homepage.html', percent_left=percent_left, full_name=full_name)
+
 
 def home():
     return render_template('homepage.html')
