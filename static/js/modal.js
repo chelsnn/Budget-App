@@ -1,4 +1,9 @@
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 2a21ff0 (Save changes before merging with main)
 // Function to Open the Login Popup
 function openLoginPopup() {
   const popupContainer = document.getElementById('loginPopupContainer');
