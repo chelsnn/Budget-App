@@ -30,7 +30,7 @@
         h1 {
             color: #007bff;
             font-size: 1.5em;
-            margin-bottom: 20px;
+            margin-bottom: 5px;
         }
         .expense-list {
             list-style: none;
@@ -88,13 +88,16 @@
         <a href="{{ url_for('addExpense') }}">Add Expense</a>
 
         {% set last_date = None %}
+        
+
         <ul class="expense-list">
             {% for expense in expenses %}
                 {% if last_date != expense['date'] %}
                     <h1>{{ 'Today' if expense['date'] == today else expense['date'] }}</h1>
                     {% set last_date = expense['date'] %}
-                {% endif %}
 
+                {% endif %}
+               
                 <li class="expense-item">
                     <div class="expense-info">
                         {% if expense['category'] == 'travel' %}
