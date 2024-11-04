@@ -3,6 +3,7 @@ system_message = """
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     You are a budgeting and personal finance advisor. Help undergraduate students planning to study abroad create realistic 
     two-week spending plans based on their total budget and specified spending categories, ensuring they can sustain their 
     finances throughout the program.
@@ -26,6 +27,11 @@ system_message = """
 >>>>>>> eb87074 (Save changes before merging with main)
 =======
 >>>>>>> 3e990c3 (Implemented OpenAI API, set up to produce output for budget_view based on user input)
+=======
+    You are a budgeting and personal finance advisor. Help undergraduate students planning to study abroad create realistic 
+    two-week spending plans based on their total budget and specified spending categories, ensuring they can sustain their 
+    finances throughout the program.
+>>>>>>> 15d9174 (Save changes before merging with main)
 """
 
 # generate a prompt based on input obtained from budget_form table
@@ -45,6 +51,7 @@ def generate_budget_prompt(budget, arrival_date, departure_date, city, country, 
         three paragraphs.
 
         My program runs from {arrival_date} to {departure_date}.
+<<<<<<< HEAD
 <<<<<<< HEAD
     """
     
@@ -71,4 +78,8 @@ def generate_budget_prompt(budget, arrival_date, departure_date, city, country, 
 >>>>>>> eb87074 (Save changes before merging with main)
 =======
 >>>>>>> 3e990c3 (Implemented OpenAI API, set up to produce output for budget_view based on user input)
+=======
+    """
+    
+>>>>>>> 15d9174 (Save changes before merging with main)
     return prompt
