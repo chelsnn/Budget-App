@@ -87,13 +87,6 @@
         <h1>Expenses</h1>
         <a href="{{ url_for('addExpense') }}">Add Expense</a>
 
-        {% set last_date = None %}
-        
-        {% macro set_last_date(new_date) %}
-            {% set last_date = new_date %}
-            {{ last_date }}
-        {% endmacro %}
-
         <ul class="expense-list">
             {% for date, expenses_for_date in expenses.items() %}
                 <h1>{{ 'Today' if date == today else date }}</h1>
@@ -120,71 +113,7 @@
                     </li>
                 {% endfor %}
             {% endfor %}
-        </ul>
-        
-        <!-- <ul class="expense-list">
-            {% for group in expenses %}
-                <h1>{{ 'Today' if group['date'] == today else group['date'] }}</h1>
-        
-               {% for expense in group %}
-                <li class="expense-item">
-                    <div class="expense-info">
-                        {% if expense['category'] == 'travel' %}
-                            <img src="{{ url_for('static', filename='images/travel.png') }}" alt="Travel Icon">
-                        {% elif expense['category'] == 'food' %}
-                            <img src="{{ url_for('static', filename='images/food.png') }}" alt="Food Icon">
-                        {% elif expense['category'] == 'shopping' %}
-                            <img src="{{ url_for('static', filename='images/shopping.png') }}" alt="Shopping Icon">
-                        {% elif expense['category'] == 'entertainment' %}
-                            <img src="{{ url_for('static', filename='images/entertainment.png') }}" alt="Entertainment Icon">
-                        {% endif %}
-
-                        <div class="expense-details">
-                            <p class="expense-title">{{ expense['expenseName'] }}</p>
-                            <p class="expense-category">{{ expense['category'] }}</p>
-                        </div>
-                    </div>
-                    <div class="expense-amount">${{ expense['amount'] }}</div>
-                </li>
-                {% endfor %}
-            {% endfor %}
-        </ul> -->
-
-       
-        <!-- <h1>Today</h1>
-
-        <ul class="expense-list">
-
-            {% for expense in expenses %}
-            <li class="expense-item">
-                <div class="expense-info">
-                    {% if expense['category'] == 'travel' %}
-                        <img src="{{ url_for('static', filename='images/travel.png') }}" alt="Travel Icon">
-                    {% elif expense['category'] == 'food' %}
-                        <img src="{{ url_for('static', filename='images/food.png') }}" alt="Food Icon">
-
-                    {% elif expense['category'] == 'shopping' %}
-                    <img src="{{ url_for('static', filename='images/shopping.png') }}" alt="Shopping Icon">
-
-                    {% elif expense['category'] == 'entertainment' %}
-                        <img src="{{ url_for('static', filename='images/entertainment.png') }}" alt="Entertainment Icon">
-
-                    {% endif %}
-
-                    <div class="expense-details">
-                        <p class="expense-title">{{expense['expenseName']}}</p>
-                        <p class="expense-category">{{expense['category']}}</p>
-                    </div>
-                </div>
-                <div class="expense-amount">${{expense['amount']}}</div>
-            </li>
-                
-            {% endfor %}
-
-            
-        </ul> -->
-
-        
+        </ul>        
     </div>
 </body>
 </html>
