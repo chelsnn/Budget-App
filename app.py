@@ -1,8 +1,9 @@
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+from collections import defaultdict
 import requests
-
 
 
 app = Flask(__name__)
@@ -12,9 +13,10 @@ app.secret_key = 'my_secret_key_for_testing_in_development_server'
 
 # create connection to sqlite database
 def get_db_connection():
-    conn = sqlite3.connect('database.db') 
+    conn = sqlite3.connect('testDB.db') 
     conn.row_factory = sqlite3.Row
     return conn
+
 
 #app = Flask(__name__)
 
@@ -35,6 +37,7 @@ def create_users_table():
 
 # Call this function when the app starts
 create_users_table()
+
 #dummy profile data
 submitted_data = {
     'first_name': 'Jane',
@@ -148,7 +151,15 @@ def home():
 
 @app.route('/expenses')
 def expenses():
-    return render_template('expenses.html')
+    today = datetime.today().strftime('%Y-%m-%d')
+    expenses_data = sorted(get_expenses(), key=lambda x: datetime.strptime(x['date'], '%Y-%m-%d'), reverse=True) #sorts expenses in backwards order to ensure display is in order
+    
+    #creates a dictionary with dates as keys to display expenses by date
+    grouped_expenses = defaultdict(list)
+    for expense in expenses_data:
+        date = expense['date']
+        grouped_expenses[date].append(expense)
+    return render_template('expenses.html', expenses=grouped_expenses, today=today)
 
 @app.route('/profile')
 def profile():
@@ -210,11 +221,8 @@ def edit_profile():
 @app.route('/addExpense', methods=['GET', 'POST'])
 def addExpense():
     if request.method == 'POST':
-        amount = request.form.get('amount')
-        expenseName = request.form.get('expenseName')
-        category = request.form.get('categories')
-        date = request.form.get('date')
-        notes = request.form.get('notes')
+        
+        add_expense()
 
         # conn = get_db_connection()
         # conn.execute('INSERT INTO expenses (amount, expenseName, category, date, notes), VALUES (?,?)', (amount, expenseName, category, date, notes))
@@ -223,6 +231,32 @@ def addExpense():
         
         return redirect(url_for('expenses'))
     return render_template('addExpense.html')
+
+def add_expense():
+    conn = get_db_connection()
+    amount = request.form.get('amount')
+    expenseName = request.form.get('expenseName')
+    category = request.form.get('category')
+    date = request.form.get('date')
+    notes = request.form.get('notes')
+    budgetID = 1
+
+    
+
+    conn.execute('''
+        INSERT INTO expenses_details (budget_id, amount, expenseName, category, date, notes)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ''', (budgetID, amount, expenseName, category, date, notes))
+    conn.commit()
+    conn.close()
+
+
+def get_expenses():
+    conn = get_db_connection()
+    cursor = conn.execute('SELECT * FROM expenses_details')
+    expenses = cursor.fetchall()
+    conn.close()
+    return expenses
 
 
 @app.route('/budget')
@@ -299,7 +333,7 @@ def budget_category_submit():
         return redirect(url_for('budget_view'))
 
 # create database to store user data
-def create_db():
+def create_tables():
     conn = get_db_connection()
     conn.execute('''
         CREATE TABLE IF NOT EXISTS budget_details (
@@ -310,6 +344,19 @@ def create_db():
             city TEXT NOT NULL,
             country TEXT NOT NULL,
             categories TEXT NOT NULL
+        );
+    ''')
+
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS expenses_details (
+            expenseID INTEGER PRIMARY KEY AUTOINCREMENT,
+            budget_id INTEGER NOT NULL,
+            amount TEXT NOT NULL,
+            category TEXT NOT NULL,
+            expenseName TEXT NOT NULL,
+            notes TEXT,
+            date TEXT NOT NULL,
+            FOREIGN KEY (budget_id) REFERENCES budget_details(id)
         );
     ''')
     conn.commit()
@@ -351,6 +398,6 @@ def currency_converter():
                            base_currency=base_currency, target_currency=target_currency, error_message=error_message, first_name=submitted_data['first_name'], last_name=submitted_data['last_name'], percent_left=percent_left)
 
 if __name__ == '__main__':
-    create_db()
+    create_tables()
     app.run(debug=True, host='127.0.0.1', port=5000)
 
