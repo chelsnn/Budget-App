@@ -482,9 +482,9 @@ def budget_view():
     return render_template('budget_view.html', budget = budget, arrival_date = arrival_date, departure_date = departure_date, 
         city = city, country = country, categories = categories, api_output = api_output)
 
-@app.route('/advice')
-def advice():
-    return render_template('advice.html')
+@app.route('/log_out')
+def log_out():
+    return render_template('login.html')
 
 @app.route('/currency_converter', methods=['POST'])
 def currency_converter():
