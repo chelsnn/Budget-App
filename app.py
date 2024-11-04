@@ -4,9 +4,16 @@ import openai
 import requests
 import prompts
 from flask import Flask, render_template, request, redirect, url_for, session
+<<<<<<< HEAD
 from datetime import datetime
 from collections import defaultdict
 from dotenv import load_dotenv
+=======
+from flask_sqlalchemy import SQLAlchemy
+import requests
+
+
+>>>>>>> 6a63961 (untracked changes)
 
 app = Flask(__name__)
 
@@ -62,6 +69,8 @@ selected = ['Accommodation', 'Food', 'Travel']
 
 #dummy budget data
 percent_left = 75
+
+
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -454,7 +463,11 @@ def currency_converter():
     amount = float(request.form['amount'])
     print(f"Received: {base_currency}, {target_currency}, Amount: {amount}")
 
+<<<<<<< HEAD
     api_key = '***REMOVED***'  
+=======
+    api_key = 'REDACTED'  
+>>>>>>> 6a63961 (untracked changes)
     url = f'https://v6.exchangerate-api.com/v6/{api_key}/pair/{base_currency}/{target_currency}'
 
     response = requests.get(url)
