@@ -1,7 +1,7 @@
 import sqlite3
 import os
 import openai
-# import requests
+import requests
 import prompts
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
@@ -14,10 +14,9 @@ from dotenv import load_dotenv, find_dotenv
 app = Flask(__name__)
 load_dotenv()
 
-# set Flask key
+# set keys
+load_dotenv()
 app.secret_key = os.getenv("FLASK_KEY")
-
-# set OpenAI API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # set OpenAI preferences
