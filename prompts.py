@@ -12,7 +12,7 @@ system_message = """
 
 # generate a prompt based on input obtained from budget_form table
 def generate_budget_prompt(budget, arrival_date, departure_date, city, country, categories):
-    prompt = """
+    prompt = f"""
         I am an undergraduate university student who is about to begin a study abroad program located in {city}, {country}.
         I am really excited to begin my program, though I have a couple reservations about how I will manage my money throughout
         the duration of the program.

@@ -364,7 +364,7 @@ def budget_category_submit():
 
             # store API output message in new column in table
             conn.execute(
-                'UPDATE budget_details SET output = ? WHERE id = ?',
+                'UPDATE budget_details SET api_output = ? WHERE id = ?',
                 (api_output, budget_id)
             )
 
@@ -386,7 +386,7 @@ def create_tables():
             city TEXT NOT NULL,
             country TEXT NOT NULL,
             categories TEXT NOT NULL,
-            output TEXT NOT NULL
+            api_output TEXT NOT NULL
         );
     ''')
 
@@ -414,7 +414,7 @@ def budget_view():
 
         # retrieve budget details along with API output
         budget_details = conn.execute(
-            'SELECT budget, arrival_date, departure_date, city, country, categories, output FROM budget_details WHERE id = ?',
+            'SELECT budget, arrival_date, departure_date, city, country, categories, api_output FROM budget_details WHERE id = ?',
             (budget_id,)
         ).fetchone()
 
