@@ -33,6 +33,7 @@ def generate_budget_prompt(budget, arrival_date, departure_date, city, country, 
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> eb87074 (Save changes before merging with main)
     prompt = f"""
@@ -51,6 +52,9 @@ def generate_budget_prompt(budget, arrival_date, departure_date, city, country, 
 =======
 >>>>>>> 3e990c3 (Implemented OpenAI API, set up to produce output for budget_view based on user input)
     prompt = """
+=======
+    prompt = f"""
+>>>>>>> 64bef94 (Commit changes to complete rebasing)
         I am an undergraduate university student who is about to begin a study abroad program located in {city}, {country}.
         I am really excited to begin my program, though I have a couple reservations about how I will manage my money throughout
         the duration of the program.
