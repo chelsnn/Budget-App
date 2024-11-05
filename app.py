@@ -4,15 +4,11 @@ import openai
 import requests
 import prompts
 from flask import Flask, render_template, request, redirect, url_for, session
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from collections import defaultdict
-import requests
-from openai import OpenAI
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 
 app = Flask(__name__)
-load_dotenv()
 
 # set keys
 load_dotenv()
@@ -87,7 +83,6 @@ def login():
             return render_template('login.html', error="Invalid credentials")
 
     return render_template('login.html')
-
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
