@@ -8,7 +8,7 @@ import requests
 
 app = Flask(__name__)
 
-# set secret key for session management
+# set secret key for session management, helps flask prevent a runtime error
 app.secret_key = 'my_secret_key_for_testing_in_development_server'
 
 # create connection to sqlite database
