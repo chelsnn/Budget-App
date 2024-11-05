@@ -70,7 +70,7 @@ body {
   
   /* Pop-up container */
   .popup-container {
-    display: none; /* Hidden by default */
+    display: flex;
     position: fixed;
     top: 0;
     left: 0;
