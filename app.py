@@ -241,7 +241,7 @@ def add_expense():
     category = request.form.get('category')
     date = request.form.get('date')
     notes = request.form.get('notes')
-    budgetID = 1
+    budgetID = session['user_id']
 
     
 
@@ -255,7 +255,9 @@ def add_expense():
 
 def get_expenses():
     conn = get_db_connection()
-    cursor = conn.execute('SELECT * FROM expenses_details')
+    cursor = conn.execute('SELECT * FROM expenses_details WHERE budget_id = ?', (session['user_id'],))
+
+    # cursor = conn.execute('SELECT * FROM expenses_details')
     expenses = cursor.fetchall()
     conn.close()
     return expenses
