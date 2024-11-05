@@ -107,6 +107,9 @@
                             <div class="expense-details">
                                 <p class="expense-title">{{ expense['expenseName'] }}</p>
                                 <p class="expense-category">{{ expense['category'] }}</p>
+                                <p class="expense-notes">{{ expense['notes'] }}</p>
+                                <button onclick="deleteExpense(expense['expense_id'])">Delete</button>
+
                             </div>
                         </div>
                         <div class="expense-amount">${{ expense['amount'] }}</div>
