@@ -1,3 +1,4 @@
+
 // Function to Open the Login Popup
 function openLoginPopup() {
   const popupContainer = document.getElementById('loginPopupContainer');
