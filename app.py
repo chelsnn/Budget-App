@@ -142,7 +142,7 @@ def homepage():
         
 
     
-    return render_template('homepage.html', percent_left=percent_left, fullname=full_name)
+    return render_template('homepage.html', percent_left=percent_left, fullname=fullname)
 
 
 def home():
@@ -181,22 +181,31 @@ def profile():
 def edit_profile():
     user_id = session.get('user_id')
     conn = get_db_connection()
+    """cursor = conn.execute("PRAGMA table_info(users);")
+    columns = cursor.fetchall()
+    for column in columns:
+        print(column)"""
     if request.method == 'POST':
         # Capture the form data
         fullname = request.form['fullname']
         email = request.form['email']
         username = request.form['username']
         password = request.form['password']
-        home_address = request.form['address']
+        address = request.form['address']
 
-        # Update the submitted_data dictionary with new values
+        # test form answers
+        print(f"User ID: {user_id}")
+        print(f"Full Name: {fullname}")
+        print(f"Email: {email}")
+        print(f"Password: {password}")
+        print(f"Address: {address}")
         
 
         # You would typically also update this in the database
         
         conn.execute(
             '''UPDATE users SET fullname = ?, email = ?, username = ?, password = ?, address = ? WHERE id = ?''',
-            (fullname, email, username, password, home_address, user_id)
+            (fullname, email, username, password, address, user_id)
         )
         conn.commit()
         conn.close()
@@ -486,7 +495,7 @@ def currency_converter():
     amount = float(request.form['amount'])
     print(f"Received: {base_currency}, {target_currency}, Amount: {amount}")
 
-    api_key = 'REDACTED'  
+    api_key = 'fakekey'  
     url = f'https://v6.exchangerate-api.com/v6/{api_key}/pair/{base_currency}/{target_currency}'
 
     response = requests.get(url)
