@@ -6,7 +6,87 @@
     
     <div class="Homepage"></div>
     <div class="menubar"></div>
-    <style></style>
+    <style>
+        /* Navbar styling */
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px 20px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        /* Main body and content styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .content {
+            margin-top: 80px; /* Offset to prevent content overlap with navbar */
+            padding: 20px;
+        }
+        h1 {
+            color: #007bff;
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+        .expense-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+        .expense-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .expense-item img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            object-fit: contain;
+        }
+        .expense-info {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        .expense-details {
+            display: flex;
+            flex-direction: column;
+        }
+        .expense-title {
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+        .expense-category {
+            color: #888;
+            font-size: 0.85em;
+        }
+        .expense-amount {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .recent-spending-box {
+            position: fixed;
+            top: 50px;
+            right: 20px;
+            width: 200px; /* Adjust width as needed */
+        }
+    
+    </style>
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> -->
   </head>
 
@@ -23,7 +103,9 @@
         <div class="percent">
           <svg>
             <circle cx="70" cy="70" r="70"></circle>
-            <circle cx="70" cy="70" r="70" class="progress_circle" style="stroke-dashoffset: calc(440 - (440 * {{ percent_left }} / 100))";></circle>
+            <circle cx="70" cy="70" r="70" class="progress_circle" style="stroke-dashoffset: calc(440 - (440 * {{ percent_left }} / 100))"></circle>
+
+            <!-- <circle cx="70" cy="70" r="70" class="progress_circle" style="stroke-dashoffset: calc(440 - (440 * {{ percent_left }} / 100))";></circle> -->
           </svg>
           <div class="num">
             <h2>{{ percent_left }}<span>%</span></h2>
@@ -34,7 +116,7 @@
 
       <div class="curr-rates">
         <div class="cforms">
-        <form class="curr-form" id="currencyForm" action="{{ url_for('currency_converter') }}" method="POST">
+          <form class="curr-form" id="currencyForm" action="{{ url_for('currency_converter') }}" method="POST">
           
             <h2 class="exchange">Exchange Rate Calculator</h2>
               <p>Enter currencies to see current exchange rates!</p>
@@ -52,30 +134,53 @@
           </form>
       
         
-    {% if converted_amount is not none %}
-      <h3 style="color: #1fa2b7;">Conversion Result:</h3>
-      <p id="result">{{ amount }} {{ base_currency }} = {{ converted_amount }} {{ target_currency }}</p>
-    {% endif %}
+          {% if converted_amount is not none %}
+            <h3 style="color: #1fa2b7;">Conversion Result:</h3>
+            <p id="result">{{ amount }} {{ base_currency }} = {{ converted_amount }} {{ target_currency }}</p>
+          {% endif %}
 
-    {% if error_message %}
-      <p style="color: red;">Error: {{ error_message }}</p>
-    {% endif %}
-    </div>
-  </div>
+          {% if error_message %}
+            <p style="color: red;">Error: {{ error_message }}</p>
+          {% endif %}
+        </div>
+      </div>
  
       <div class="mod">
         <h2 class="modhead">Recent Spending</h2>
-  
-  
-  
+
+        
+          <ul class="expense-list">
+            {% for date, expenses_for_date in expenses.items() %}
+                <h3>{{ 'Today' if date == today else date }}</h3>
+                
+                {% for expense in expenses_for_date %}
+                    <li class="expense-item">
+                        <div class="expense-info">
+                            {% if expense['category'] == 'accomodation' %} 
+                                <img src="{{ url_for('static', filename='icons/accomodation.png') }}" alt="Accomodation Icon" class="icon">
+                            {% elif expense['category'] == 'travel' %}
+                                <img src="{{ url_for('static', filename='images/travel.png') }}" alt="Travel Icon">
+                            {% elif expense['category'] == 'food' %}
+                                <img src="{{ url_for('static', filename='images/food.png') }}" alt="Food Icon">
+                            {% elif expense['category'] == 'shopping' %}
+                                <img src="{{ url_for('static', filename='images/shopping.png') }}" alt="Shopping Icon">
+                            {% elif expense['category'] == 'entertainment' %}
+                                <img src="{{ url_for('static', filename='images/entertainment.png') }}" alt="Entertainment Icon">
+                            {% elif expense['category'] == 'miscellaneous' %} 
+                                <img src="{{ url_for('static', filename='icons/miscellaneous.png') }}" alt="Miscellaneous Icon" class="icon">
+                            {% endif %}
+                            <div class="expense-details">
+                                <p class="expense-title">{{ expense['expenseName'] }}</p>
+                                <p class="expense-category">{{ expense['category'] }}</p>
+                            </div>
+                        </div>
+                        <div class="expense-amount">${{ expense['amount'] }}</div>
+                    </li>
+                {% endfor %}
+            {% endfor %}
+          </ul>        
+        </div>    
       </div>
-
-
-      
-    </div>
-
-    
-
     </div>
   </body>
 </html>
