@@ -143,10 +143,19 @@ def homepage():
         
     else:
         full_name = "Guest"
-        
 
+    today = datetime.today().strftime('%Y-%m-%d')
+    expenses_data = sorted(
+    sorted(get_expenses(), key=lambda x: x['expenseID'], reverse=True)[:5],
+    key=lambda x: datetime.strptime(x['date'], '%Y-%m-%d'), 
+    reverse=True
+)
+    grouped_expenses = defaultdict(list)
+    for expense in expenses_data:
+        date = expense['date']
+        grouped_expenses[date].append(expense)
     
-    return render_template('homepage.html', percent_left=percent_left, full_name=full_name)
+    return render_template('homepage.html', percent_left=percent_left, full_name=full_name, expenses=grouped_expenses, today=today)
 
 
 def home():
@@ -164,6 +173,11 @@ def expenses():
         date = expense['date']
         grouped_expenses[date].append(expense)
     return render_template('expenses.html', expenses=grouped_expenses, today=today)
+
+
+ #sorts expenses in backwards order to ensure display is in order
+    
+
 
 @app.route('/profile')
 def profile():
