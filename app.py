@@ -256,12 +256,18 @@ def add_expense():
     conn.commit()
     conn.close()
 
+@app.route('/delete/<int:expense_id>', methods=['POST'])
+def delete_expense(expense_id):
+    conn = get_db_connection()  # Open a new database connection
+    conn.execute('DELETE FROM expenses_details WHERE expenseID = ?', (expense_id,))
+    conn.commit()
+    conn.close()  # Close the database connection
+    return redirect(url_for('expenses'))
 
 def get_expenses():
     conn = get_db_connection()
     cursor = conn.execute('SELECT * FROM expenses_details WHERE budget_id = ?', (session['user_id'],))
 
-    # cursor = conn.execute('SELECT * FROM expenses_details')
     expenses = cursor.fetchall()
     conn.close()
     return expenses
