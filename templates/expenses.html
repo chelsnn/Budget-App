@@ -94,7 +94,9 @@
                 {% for expense in expenses_for_date %}
                     <li class="expense-item">
                         <div class="expense-info">
-                            {% if expense['category'] == 'travel' %}
+                            {% if expense['category'] == 'accomodation' %} 
+                                <img src="{{ url_for('static', filename='icons/accomodation.png') }}" alt="Accomodation Icon" class="icon">
+                            {% elif expense['category'] == 'travel' %}
                                 <img src="{{ url_for('static', filename='images/travel.png') }}" alt="Travel Icon">
                             {% elif expense['category'] == 'food' %}
                                 <img src="{{ url_for('static', filename='images/food.png') }}" alt="Food Icon">
@@ -102,6 +104,9 @@
                                 <img src="{{ url_for('static', filename='images/shopping.png') }}" alt="Shopping Icon">
                             {% elif expense['category'] == 'entertainment' %}
                                 <img src="{{ url_for('static', filename='images/entertainment.png') }}" alt="Entertainment Icon">
+                            {% elif expense['category'] == 'miscellaneous' %} 
+                                <img src="{{ url_for('static', filename='icons/miscellaneous.png') }}" alt="Miscellaneous Icon" class="icon">
+                                
                             {% endif %}
         
                             <div class="expense-details">
