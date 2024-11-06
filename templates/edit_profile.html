@@ -20,76 +20,80 @@
             <form class="prof_form" action="{{ url_for('edit_profile') }}" method="POST">
 
              <label for="fullname">Full Name</label> 
-            <input class="form_inputs type="text" id="fullname" name="fullname" value="{{ user.fullname }}" ><br><br>
+            <input class="form_inputs type="text" id="fullname" name="fullname" value="{{ user['fullname'] }}" ><br><br>
 
             <label for="email">Email</label> 
-            <input class="form_inputs type="text" id="email" name="email" value="{{ user.email }}" ><br><br>
+            <input class="form_inputs" type="email" id="email" name="email" value="{{ user['email'] }}" ><br><br>
 
             <label for="username">Username</label> 
-            <input class="form_inputs type="text" id="username" name="username" value="{{ user.username }}" ><br><br>
+            <input class="form_inputs" type="text" id="username" name="username" value="{{ user['username'] }}" ><br><br>
 
             <label for="password">Password</label> 
-            <input class="form_inputs type="text" id="password" name="password" value="{{ user.password }}" ><br><br>
+            <input class="form_inputs" type="text" id="password" name="password" value="{{ user['password'] }}" ><br><br>
 
 
-            <label for="home_addess">Home Address</label> 
-            <input class="form_inputs" type="text" id="home_address" name="home_address" value="{{ user.home_address }}" ><br><br>
+            <label for="address">Address</label> 
+            <input class="form_inputs" type="text" id="address" name="address" value="{{ user['address'] }}" ><br><br>
+
+            
+            <div class="spend_cats">
+                <h2 class="spend_form">Spending Categories</h2>
+                <form id="spending-categories">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="cats" value="Accommodation"
+                        {% if 'Accommodation' in selected %}checked{% endif %}>
+                            Accommodation
+                    </label>
+    
+    
+                    <label>
+                        <input type="checkbox" name="cats" value="Food"
+                        {% if 'Food' in selected %}checked{% endif %}>
+                            Food
+                    </label>
+    
+    
+                    <label>
+                        <input type="checkbox" name="cats" value="Travel"
+                        {% if 'Travel' in selected %}checked{% endif %}>
+                            Travel
+                    </label>
+    
+    
+                    <label>
+                        <input type="checkbox" name="cats" value="Entertainment"
+                        {% if 'Entertainment' in selected %}checked{% endif %}>
+                            Entertainment
+                    </label>
+    
+                    <label>
+                        <input type="checkbox" name="cats" value="Shopping"
+                        {% if 'Shopping' in selected %}checked{% endif %}>
+                            Shopping
+                    </label>
+    
+                    <label>
+                        <input type="checkbox" name="cats" value="Miscellaneous"
+                       {% if 'Miscellaneous' in selected %}checked{% endif %}> 
+                            Miscellaneous
+                    </label>
+    
+    
+                </div>
+                <div class="submit">
+                    <button type="submit" class="submit" onclick=location.href="{{ url_for('profile') }}">Submit Changes</button>
+        
+                </div>
+                </form>
+            </div>
+    
                 
             </form>   
         </div>
 
-        <div class="spend_cats">
-            <h2 class="spend_form">Spending Categories</h2>
-            <form id="spending-categories">
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="cats" value="Accommodation"
-                    {% if 'Accommodation' in selected %}checked{% endif %}>
-                        Accommodation
-                </label>
-
-
-                <label>
-                    <input type="checkbox" name="cats" value="Food"
-                    {% if 'Food' in selected %}checked{% endif %}>
-                        Food
-                </label>
-
-
-                <label>
-                    <input type="checkbox" name="cats" value="Travel"
-                    {% if 'Travel' in selected %}checked{% endif %}>
-                        Travel
-                </label>
-
-
-                <label>
-                    <input type="checkbox" name="cats" value="Entertainment"
-                    {% if 'Entertainment' in selected %}checked{% endif %}>
-                        Entertainment
-                </label>
-
-                <label>
-                    <input type="checkbox" name="cats" value="Shopping"
-                    {% if 'Shopping' in selected %}checked{% endif %}>
-                        Shopping
-                </label>
-
-                <label>
-                    <input type="checkbox" name="cats" value="Miscellaneous"
-                   {% if 'Miscellaneous' in selected %}checked{% endif %}> 
-                        Miscellaneous
-                </label>
-
-
-            </div>
-            </form>
-        </div>
-
-        <div class="submit">
-            <button type="submit" class="submit" onclick=location.href="{{ url_for('profile') }}">Submit Changes</button>
-
-        </div>
+       
+        
 
 
   </body>
