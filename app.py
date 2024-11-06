@@ -310,18 +310,26 @@ def budget_form_submit():
         city = request.form['city']
         country = request.form['country']
 
-        # insert data into sqlite
-        conn = get_db_connection()
-        cursor = conn.execute('INSERT INTO budget_details (budget, arrival_date, departure_date, city, country, categories, output) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            (budget, arrival_date, departure_date, city, country, 'temp', 'temp'))
-        conn.commit()
-        conn.close()
+        # retrieve the user id from the session if logged in
+        user_id = session.get('user_id')
 
-        # store record ID for current session
-        session['budget_id'] = cursor.lastrowid
+        if user_id:
+            # insert user input into sqLite
+            conn = get_db_connection()
+            cursor = conn.execute(
+                'INSERT INTO budget_details (budget, arrival_date, departure_date, city, country, categories, api_output, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                (budget, arrival_date, departure_date, city, country, 'temp', 'temp', user_id)
+            )
+            conn.commit()
+            conn.close()
+            
+            # store the record id for current session
+            session['budget_id'] = cursor.lastrowid
 
-        # after form submission, redirect to budget_category page
-        return redirect(url_for('budget_category'))
+            # After form submission, redirect to budget_category page
+            return redirect(url_for('budget_category'))
+        else:
+            return "Error: User not logged in", 403
 
 @app.route('/budget_category')
 def budget_category():
@@ -426,13 +434,15 @@ def create_tables():
     conn.execute('''
         CREATE TABLE IF NOT EXISTS budget_details (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
             budget REAL NOT NULL,
             arrival_date TEXT NOT NULL,
             departure_date TEXT NOT NULL,
             city TEXT NOT NULL,
             country TEXT NOT NULL,
             categories TEXT NOT NULL,
-            output TEXT NOT NULL
+            api_output TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id)
         );
     ''')
 
