@@ -30,7 +30,7 @@
         h1 {
             color: #007bff;
             font-size: 1.5em;
-            margin-bottom: 20px;
+            margin-bottom: 5px;
         }
         .expense-list {
             list-style: none;
@@ -87,60 +87,39 @@
         <h1>Expenses</h1>
         <a href="{{ url_for('addExpense') }}">Add Expense</a>
 
-       
-        <h1>Today</h1>
         <ul class="expense-list">
-            <li class="expense-item">
-                <div class="expense-info">
-                    <img src="travel.png" alt="Travel Icon">
-                    <div class="expense-details">
-                        <p class="expense-title">Flight to Spain</p>
-                        <p class="expense-category">Travel</p>
-                    </div>
-                </div>
-                <div class="expense-amount">$200</div>
-            </li>
-            <li class="expense-item">
-                <div class="expense-info">
-                    <img src="travel.png" alt="Travel Icon">
-                    <div class="expense-details">
-                        <p class="expense-title">Flight to London</p>
-                        <p class="expense-category">Travel</p>
-                    </div>
-                </div>
-                <div class="expense-amount">$134</div>
-            </li>
-            <li class="expense-item">
-                <div class="expense-info">
-                    <img src="food.png" alt="Food Icon">
-                    <div class="expense-details">
-                        <p class="expense-title">Taco</p>
-                        <p class="expense-category">Food</p>
-                    </div>
-                </div>
-                <div class="expense-amount">$12</div>
-            </li>
-            <li class="expense-item">
-                <div class="expense-info">
-                    <img src="shopping.png" alt="Shopping Icon">
-                    <div class="expense-details">
-                        <p class="expense-title">Jacket</p>
-                        <p class="expense-category">Shopping</p>
-                    </div>
-                </div>
-                <div class="expense-amount">$39</div>
-            </li>
-            <li class="expense-item">
-                <div class="expense-info">
-                    <img src="entertainment.png" alt="Entertainment Icon">
-                    <div class="expense-details">
-                        <p class="expense-title">Movie</p>
-                        <p class="expense-category">Entertainment</p>
-                    </div>
-                </div>
-                <div class="expense-amount">$20</div>
-            </li>
-        </ul>
+            {% for date, expenses_for_date in expenses.items() %}
+                <h1>{{ 'Today' if date == today else date }}</h1>
+                
+                {% for expense in expenses_for_date %}
+                    <li class="expense-item">
+                        <div class="expense-info">
+                            {% if expense['category'] == 'travel' %}
+                                <img src="{{ url_for('static', filename='images/travel.png') }}" alt="Travel Icon">
+                            {% elif expense['category'] == 'food' %}
+                                <img src="{{ url_for('static', filename='images/food.png') }}" alt="Food Icon">
+                            {% elif expense['category'] == 'shopping' %}
+                                <img src="{{ url_for('static', filename='images/shopping.png') }}" alt="Shopping Icon">
+                            {% elif expense['category'] == 'entertainment' %}
+                                <img src="{{ url_for('static', filename='images/entertainment.png') }}" alt="Entertainment Icon">
+                            {% endif %}
+        
+                            <div class="expense-details">
+                                <p class="expense-title">{{ expense['expenseName'] }}</p>
+                                <p class="expense-category">{{ expense['category'] }}</p>
+                                <p class="expense-notes">{{ expense['notes'] }}</p>
+                                <form action="{{ url_for('delete_expense', expense_id=expense['expenseID']) }}" method="POST">
+                                    <button type="submit">Delete</button>
+                                </form>
+                                
+
+                            </div>
+                        </div>
+                        <div class="expense-amount">${{ expense['amount'] }}</div>
+                    </li>
+                {% endfor %}
+            {% endfor %}
+        </ul>        
     </div>
 </body>
 </html>
