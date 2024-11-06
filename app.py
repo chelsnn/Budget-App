@@ -129,14 +129,14 @@ def homepage():
     conn.close()
 
     if user:
-        full_name = user['fullname']
+        fullname = user['fullname']
         
     else:
         full_name = "Guest"
         
 
     
-    return render_template('homepage.html', percent_left=percent_left, full_name=full_name)
+    return render_template('homepage.html', percent_left=percent_left, fullname=full_name)
 
 
 def home():
@@ -181,7 +181,7 @@ def edit_profile():
         email = request.form['email']
         username = request.form['username']
         password = request.form['password']
-        home_country = request.form['address']
+        home_address = request.form['address']
 
         # Update the submitted_data dictionary with new values
         
@@ -190,7 +190,7 @@ def edit_profile():
         
         conn.execute(
             '''UPDATE users SET fullname = ?, email = ?, username = ?, password = ?, address = ? WHERE id = ?''',
-            (fullname, email, username, password, home_country, user_id)
+            (fullname, email, username, password, home_address, user_id)
         )
         conn.commit()
         conn.close()
@@ -441,6 +441,17 @@ def log_out():
 
 @app.route('/currency_converter', methods=['POST'])
 def currency_converter():
+    conn = get_db_connection()
+    user_id = session.get('user_id')
+    user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
+    conn.close()
+
+    if user:
+        fullname = user['fullname']
+        
+    else:
+        fullname = "Guest"
+        
     base_currency = request.form['base_currency'].upper()
     target_currency = request.form['target_currency'].upper()
     amount = float(request.form['amount'])
@@ -464,7 +475,7 @@ def currency_converter():
         error_message = f'API request failed with status code {response.status_code}'
 
     return render_template('homepage.html', converted_amount=converted_amount, amount=amount, 
-                           base_currency=base_currency, target_currency=target_currency, error_message=error_message, first_name=submitted_data['first_name'], last_name=submitted_data['last_name'], percent_left=percent_left)
+                           base_currency=base_currency, target_currency=target_currency, error_message=error_message, percent_left=percent_left, fullname=fullname)
 
 if __name__ == '__main__':
     create_tables()
