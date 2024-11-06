@@ -214,6 +214,8 @@ def edit_profile():
         return redirect(url_for('homepage'))  # Redirect to profile page after submission
     return render_template('edit_profile.html', data=submitted_data, selected=selected)
 
+
+
 # @app.route('/homepage')
 # def homepage():
 #     return render_template('homepage.html')
