@@ -253,7 +253,7 @@ def add_expense():
 @app.route('/delete/<int:expense_id>', methods=['POST'])
 def delete_expense(expense_id):
     conn = get_db_connection()  # Open a new database connection
-    conn.execute('DELETE FROM expenses_details WHERE expense_id = ?', (expense_id,))
+    conn.execute('DELETE FROM expenses_details WHERE expenseID = ?', (expense_id,))
     conn.commit()
     conn.close()  # Close the database connection
     return redirect(url_for('expenses'))
