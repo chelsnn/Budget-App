@@ -38,10 +38,11 @@
         }
         .expense-list {
             list-style: none;
-            padding: 0;
+            padding-top: 0;
             display: flex;
             align-items: center;
             flex-direction: column;
+            
         }
         .expense-item {
             display: flex;
@@ -145,9 +146,8 @@
         </div>
       </div>
  
-      <div class="mod">
+      <div class="Budget-Bar">
         <h2 class="modhead">Recent Spending</h2>
-
         
           <ul class="expense-list">
             {% for date, expenses_for_date in expenses.items() %}
@@ -170,8 +170,8 @@
                                 <img src="{{ url_for('static', filename='icons/miscellaneous.png') }}" alt="Miscellaneous Icon" class="icon">
                             {% endif %}
                             <div class="expense-details">
-                                <p class="expense-title">{{ expense['expenseName'] }}</p>
-                                <p class="expense-category">{{ expense['category'] }}</p>
+                              <a class="expense-title" href="{{ url_for('expenses') }}"><strong>{{ expense['expenseName'] }}</strong></a>
+                              <p class="expense-category">{{ expense['category'] }}</p>
                             </div>
                         </div>
                         <div class="expense-amount">${{ expense['amount'] }}</div>
