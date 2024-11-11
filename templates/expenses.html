@@ -26,6 +26,9 @@
         .content {
             margin-top: 80px; /* Offset to prevent content overlap with navbar */
             padding: 20px;
+            align-items: center;
+            flex-direction: column;
+            display: flex;
         }
         h1 {
             color: #007bff;
@@ -74,6 +77,46 @@
             font-weight: bold;
             color: #333;
         }
+
+        .expenses-title {
+            position: relative;
+            padding-top: 50px;
+            
+        }
+        
+        .add {
+            font-weight: bold;
+        }
+
+        .add-button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        background-color: #1fa2b7; /* Primary button color */
+        color: white; /* Text color */
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s, box-shadow 0.3s;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+        text-align: center;
+        display: inline-block; /* Ensures it behaves like a button */
+        text-decoration: none; /* Removes underline from links */
+        visibility: visible; /* Ensure it is always visible */
+        opacity: 1; /* Ensure full opacity */
+    }
+
+    /* Hover effect for the Add Expense button */
+    .add-button:hover {
+        background-color: #14869e; /* Darker shade on hover */
+    }
+
+    /* Styling for the link inside the Add Expense button */
+    .add-button a {
+        color: white; /* Ensures text color is white */
+        text-decoration: none; /* Removes underline from link */
+        display: block; /* Makes the link fill the button area */
+    }
     </style>
 </head>
 <body>
@@ -84,8 +127,10 @@
 
     <!-- Main content -->
     <div class="content">
-        <h1>Expenses</h1>
-        <a href="{{ url_for('addExpense') }}">Add Expense</a>
+        <h1 class="expenses-title">Expenses</h1>
+        <button class="add-button">
+            <a href="{{ url_for('addExpense') }}">Add Expense</a>
+        </button>
 
         <ul class="expense-list">
             {% for date, expenses_for_date in expenses.items() %}
