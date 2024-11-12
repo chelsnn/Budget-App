@@ -139,6 +139,7 @@ form button {
 button {
     style=box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
+
 .modhead {
     
     height: 500px;
@@ -421,7 +422,6 @@ a:visited {
     transition: stroke-dashoffset 0.5s ease;
     stroke: #b7341f;
     stroke-dashoffset: calc(440 - (440 * {{ percent_left }} / 100)); 
-    
 }
 
 .text {
