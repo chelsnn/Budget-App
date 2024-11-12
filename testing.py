@@ -2,7 +2,7 @@ import pytest
 from playwright.async_api import async_playwright, expect
 
 @pytest.mark.asyncio
-async def test_login():
+async def test_login(): #normal sign in
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=False)
         page = await browser.new_page()
@@ -24,7 +24,7 @@ async def test_login():
         await browser.close()
 
 @pytest.mark.asyncio
-async def test_home():
+async def test_home(): #homepage elements exist
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=False)
         page = await browser.new_page()
@@ -50,7 +50,7 @@ async def test_home():
         await browser.close()
 
 @pytest.mark.asyncio
-async def test_signup():
+async def test_signup(): #signup with new account
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=False)
         page = await browser.new_page()
@@ -76,7 +76,7 @@ async def test_signup():
 
 
 @pytest.mark.asyncio
-async def test_expenses(): #and that login from sign up works
+async def test_expenses(): #add expense and that login from sign up works
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=False)
         page = await browser.new_page()
@@ -95,6 +95,13 @@ async def test_expenses(): #and that login from sign up works
         await expect(page.locator("h1.expenses-title", has_text="Expenses")).to_be_visible()
         await page.locator("button.add-button", has_text="Add Expense").click() 
         await expect(page.locator("h1", has_text="Add Expense")).to_be_visible()
+        await page.fill("input[name='amount']", "33")
+        await page.fill("input[name='expenseName']", "Testing")
+        # await page.locator("input[type='radio'][value='Food']").check()
+        # await page.fill("input[name='date']", "11/12/2024")
+        # await page.fill("input[name='notes']", "Testing notes")
+        # await page.locator("button", has_text="Add").click()
+        # await expect(page.locator("h1.expenses-title", has_text="Expenses")).to_be_visible()
         
         
         await browser.close()
