@@ -1,0 +1,91 @@
+<html>
+<head>
+    <title>Budget App</title>
+    <style>
+         .category-item img {
+            width: 40px;
+            height: 40px;
+            
+        }
+        .category {
+            display: inline-flex; 
+            align-items: center;
+            margin-bottom: 8px;
+            flex-direction: row;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <h1>Add Expense</h1>
+   <form action="/addExpense" style="display: flex; flex-direction: column; align-items: center;" method="POST">
+       <div class="category-item">
+
+        
+            <label id="amount">Amount:</label>
+            <input type="number" name="amount"></input>
+            <br></br>
+
+            <label id="expenseName">Name of Expense:</label>
+            <input type="text" name="expenseName"></input>
+            <br></br>
+
+            <label id="categories">Choose a Category:</label>
+            <br></br>
+
+            <div class="category">
+                 <input type="radio" id="accomodation" name="category" value="accomodation" required>
+                <img src="{{ url_for('static', filename='icons/accomodation.png') }}" alt="Accomodation Icon">
+                <br>
+                <label for="food">Food</label><br>
+            </div>
+
+            <div class="category">
+                <input type="radio" id="food" name="category" value="food" required>
+                <img src="{{ url_for('static', filename='images/food.png') }}" alt="Food Icon">
+                <br>
+                <label for="food">Food</label><br>
+            </div>
+            
+            <div class="category">
+                <input type="radio" id="travel" name="category" value="travel">
+                <img src="{{ url_for('static', filename='images/travel.png') }}" alt="Travel Icon">
+                <br>
+                <label for="transport">Travel</label><br>
+            </div>
+            
+            <div class="category">
+                <input type="radio" id="entertainment" name="category" value="entertainment">
+                <img class="category-item" src="{{ url_for('static', filename='images/entertainment.png') }}" alt="Entertainment Icon">
+                <br>
+                <label for="entertainment">Entertainment</label><br>
+            </div>
+            
+            <div class="category">
+                <input type="radio" id="shopping" name="category" value="shopping">
+                <img src="{{ url_for('static', filename='images/shopping.png') }}" alt="Shopping Icon">
+                <br>
+                <label for="shopping">Shopping</label><br>
+            </div>
+
+            <div class="category">
+                <input type="radio" id="miscellaneous" name="category" value="miscellaneous">
+                <img src="{{ url_for('static', filename='icons/miscellaneous.png') }}" alt="Miscellaneous Icon" class="icon">
+                <br>
+                <label for="miscallaneous">Miscellaneous</label><br>
+
+            </div>
+            <br>
+            
+            <label id="date">Select Date:</label>
+            <input type="date" name="date">
+            <br></br>
+            <label id="notes">Notes:</label>
+            <input type="text" name="notes"></input>
+            <br></br>
+            <button type="submit">Add</button>
+            <br></br>
+        </div>
+    </form>
+</body>
+</html>

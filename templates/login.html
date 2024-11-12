@@ -1,0 +1,58 @@
+<!-- Both Login, signup, and forogot password popups -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudentSpender Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+
+<script>
+window.onload = function() {
+  openLoginPopup();
+};
+</script>
+
+<body>
+
+    <!-- <button onclick="openLoginPopup()">Login</button> -->
+  
+  <!-- Pop-up container -->
+  <div id="loginPopupContainer" class="popup-container">
+    <div class="popup-content">
+        <button class="close-btn" onclick="closeLoginPopup()">×</button>
+
+      <h1 class="logo">StudentSpender</h1>
+      <h2>Login to your Account</h2>
+
+      {% if error %}
+        <p style="color: rgb(0, 0, 0);">{{ error }}</p>
+      {% endif %}
+
+      <form action="{{ url_for('login') }}" method="POST">
+        <label for="username" class="hidden-label">Username</label>
+        <input type="text" id="username" name="username" placeholder="Username" required>
+
+        <label for="password" class="hidden-label">Password</label>
+        <input type="password" id="password" name="password" placeholder="Password" required>
+
+        <button type="submit" class="primary-btn">Login</button>
+        
+          <p class="forgot-password"><a href="{{ url_for('forgotPassword') }}">Forgot your password?</a></p>
+          <p class="signup-link">Don’t have an account? <a href="{{ url_for('signup') }}">Sign up</a></p>
+        <div class="social-login">
+            <button type="button" class="social-btn google">
+                <img src="static/images/icons8-google.svg" alt="Google logo"> Continue with Google
+            </button>
+        </div>
+      </form>
+
+      
+    </div>
+  </div>
+  
+
+  <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
+</body>
+</html> 
