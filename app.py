@@ -10,11 +10,11 @@ from dotenv import load_dotenv, find_dotenv
 
 app = Flask(__name__)
 
-# load the .env file and set OpenAI API secret key
-_ = load_dotenv(find_dotenv())
-client = OpenAI(
-    api_key = os.environ.get('OPENAI_API_KEY')
-)
+# set keys
+load_dotenv()
+app.secret_key = os.getenv("FLASK_KEY")
+openai.api_key = os.getenv("OPENAI_API_KEY")
+exchange_key = os.getenv("xchange_key")
 
 # set AI model preferences
 model =  "gpt-4o-mini"
@@ -495,8 +495,8 @@ def currency_converter():
     amount = float(request.form['amount'])
     print(f"Received: {base_currency}, {target_currency}, Amount: {amount}")
 
-    api_key = 'fakekey'  
-    url = f'https://v6.exchangerate-api.com/v6/{api_key}/pair/{base_currency}/{target_currency}'
+    
+    url = f'https://v6.exchangerate-api.com/v6/{exchange_key}/pair/{base_currency}/{target_currency}'
 
     response = requests.get(url)
     converted_amount = None
