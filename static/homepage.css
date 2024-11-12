@@ -137,7 +137,7 @@ form button {
 }
 
 button {
-    style=box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 .modhead {
     
@@ -241,7 +241,7 @@ h1 {
 
 /*Nav Bar Css start*/
 
-ul li {
+/* ul li {
     list-style: none;
     display: flex;
     float: right;
@@ -312,8 +312,67 @@ nav {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+nav .logo img {
+    height: 20px; 
+    margin-right: 20px; 
+  }
 
+a:visited {
+    color: #1fa2b7;
+} */
 
+/* Style the nav to use flexbox for aligning logo and nav items */
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Pushes nav items to the right */
+    padding: 5px 30px;
+    width: 100vw;
+    height: 100px;
+    background-color: #ffffff;
+    z-index: 99;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo styling */
+nav .logo img {
+    height: 50px; /* Larger logo size */
+    margin-right: 20px; /* Space between the logo and navbar items */
+}
+
+/* Align the nav items to the right */
+ul.navlinks {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 10px;
+}
+
+/* Nav item styling */
+ul.navlinks li {
+    padding: 0 15px; /* Space between items */
+}
+
+ul.navlinks li a {
+    font-size: 16px;
+    color: #1fa2b7;
+    text-decoration: none;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    padding: 10px 15px;
+    border-radius: 8px;
+}
+
+/* Hover effect for nav items */
+ul.navlinks li a:hover, 
+ul.navlinks li a:active {
+    color: #ffffff;
+    background-color: #1fa2b7;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Ensures visited links are styled */
 a:visited {
     color: #1fa2b7;
 }
@@ -477,3 +536,6 @@ body {
     height: 40px;
     margin-left: 10px;
 }
+
+
+
