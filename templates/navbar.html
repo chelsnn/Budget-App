@@ -8,7 +8,10 @@
   <body>
     <nav>
       <a href="{{ url_for('homepage') }}" class="logo">
-        <img src="{{ url_for('static', filename='images/navbarlogo.png') }}" alt="Logo" />
+        <img
+          src="{{ url_for('static', filename='images/navbarlogo.png') }}"
+          alt="Logo"
+        />
       </a>
       <!-- <ul class="navlinks">
         <li class="nav-item">
@@ -28,12 +31,22 @@
         </li>
       </ul> -->
       <ul class="navlinks">
-        <li><a href="#"><strong>Advice</strong></a></li>
-        <li><a href="{{ url_for('profile') }}"><strong>Profile</strong></a></li>
-        <li><a href="{{ url_for('budget_form') }}"><strong>Budget</strong></a></li>
-        <li><a href="{{ url_for('expenses') }}"><strong>Expenses</strong></a></li>
-        <li><a href="{{ url_for('homepage') }}"><strong>Home</strong></a></li>
-    </ul>
+        <li>
+          <a href="{{ url_for('homepage') }}"><strong>Home</strong></a>
+        </li>
+        <li>
+          <a href="{{ url_for('expenses') }}"><strong>Expenses</strong></a>
+        </li>
+        <li>
+          <a href="{{ url_for('budget_form') }}"><strong>Budget</strong></a>
+        </li>
+        <li>
+          <a href="{{ url_for('profile') }}"><strong>Profile</strong></a>
+        </li>
+        <li>
+          <a href="{{ url_for('login') }}"><strong>Log Out</strong></a>
+        </li>
+      </ul>
     </nav>
   </body>
 </html>
