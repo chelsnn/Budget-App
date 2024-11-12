@@ -14,26 +14,57 @@
     
     {% include 'navbar.html' %}
    
-    <h1>Welcome Back, "your name"</h1>
+    <h1 class="welc">Welcome Back, {{ full_name }}</h1>
 
     <div class="boxes">
 
       <div class="Budget-Bar">
-        <h2>Total Budget</h2>
+        <h2 class="modhead">Total Budget</h2>
         <div class="percent">
           <svg>
             <circle cx="70" cy="70" r="70"></circle>
-            <circle cx="70" cy="70" r="70"></circle>
+            <circle cx="70" cy="70" r="70" class="progress_circle" style="stroke-dashoffset: calc(440 - (440 * {{ percent_left }} / 100))";></circle>
           </svg>
           <div class="num">
-            <h2>0<span>%</span></h2>
+            <h2>{{ percent_left }}<span>%</span></h2>
           </div>
         </div>
         <h2 class="text">Weekly Budget Left</h2>
       </div>
+
+      <div class="curr-rates">
+        <div class="cforms">
+        <form class="curr-form" id="currencyForm" action="{{ url_for('currency_converter') }}" method="POST">
+          
+            <h2 class="exchange">Exchange Rate Calculator</h2>
+              <p>Enter currencies to see current exchange rates!</p>
+             <label for="base_currency" >Base Currency</label> 
+            <input type="text" id="base_currency" name="base_currency" required placeholder="USD"><br><br>
+
+            <label for="target_currency">To Currency</label> 
+            <input type="text" id="target_currency" name="target_currency" required placeholder="EUR"><br><br>
+
+            <label for="amount">Enter Amount</label> 
+            <input type="number" id="amount" name="amount" required placeholder="1"><br><br>
+
+            <button type="submit" style="color: white;"  >See Conversion</button>
+              
+          </form>
       
+        
+    {% if converted_amount is not none %}
+      <h3 style="color: #1fa2b7;">Conversion Result:</h3>
+      <p id="result">{{ amount }} {{ base_currency }} = {{ converted_amount }} {{ target_currency }}</p>
+    {% endif %}
+
+    {% if error_message %}
+      <p style="color: red;">Error: {{ error_message }}</p>
+    {% endif %}
+    </div>
+  </div>
+ 
       <div class="mod">
-        <h2>Module</h2>
+        <h2 class="modhead">Recent Spending</h2>
   
   
   

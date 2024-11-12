@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+        <title>Budget View - StudentSpender</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
+    </head>
+    
+    <body>
+        <!-- include navigation bar -->
+        {% include 'navbar.html' %}
+
+        <!-- display text describing webpage purpose -->
+        <h1>View Your Budget!</h1>
+        <h3>Here's how we recommend you spend your money during your time abroad.</h3>
+
+        <h3>To recap, here is the information you submitted:</h3>
+        <p>Budget: {{ budget }}</p>
+        <p>Arrival Date: {{ arrival_date }}</p>
+        <p>Departure Date: {{ departure_date }}</p>
+        <p>City: {{ city }}</p>
+        <p>Country: {{ country }}</p>
+        <p>Categories: {{ categories }}</p>
+
+        <!-- display AI-generated budget breakdown if available -->
+        {% if api_output %}
+            <div>
+                <br></br>
+                <h2>Here is your personalized spending plan, powered by AI:</h2>
+                <p>{{ api_output }}</p>
+            </div>
+        {% else %}
+            <p>No AI-generated budget available.</p>
+        {% endif %}
+    </body>
+</html>
