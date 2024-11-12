@@ -2,6 +2,9 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 15d9174 (Save changes before merging with main)
 =======
 >>>>>>> 15d9174 (Save changes before merging with main)
 =======
@@ -9,10 +12,13 @@
 
 >>>>>>> 2a21ff0 (Save changes before merging with main)
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 
 >>>>>>> eb87074 (Save changes before merging with main)
+=======
+>>>>>>> 15d9174 (Save changes before merging with main)
 =======
 >>>>>>> 15d9174 (Save changes before merging with main)
 // Function to Open the Login Popup
