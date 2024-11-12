@@ -218,3 +218,13 @@ body {
 .social-btn.google {
   border-color: #1fa2b7
 }
+
+.popup-content {
+  text-align: center; /* Center the contents in the popup */
+}
+
+.logo-image {
+  width: 150px; /* Adjust the size as needed */
+  height: auto;
+  margin-bottom: 1px; /* Add some spacing below the logo */
+}

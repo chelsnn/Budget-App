@@ -1,12 +1,12 @@
 import sqlite3
 import os
-import openai
-import requests
 import prompts
 from flask import Flask, render_template, request, redirect, url_for, session
-from datetime import datetime
-from collections import defaultdict
-from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
+import requests
+from openai import OpenAI
+from dotenv import load_dotenv, find_dotenv
+
 from datetime import datetime
 
 app = Flask(__name__)
@@ -15,12 +15,16 @@ app = Flask(__name__)
 load_dotenv()
 app.secret_key = os.getenv("FLASK_KEY")
 openai.api_key = os.getenv("OPENAI_API_KEY")
+exchange_key = os.getenv("xchange_key")
 
-# set OpenAI preferences
-client = openai  
-temperature = 0.7  
-max_tokens = 500  
-model = "gpt-4o-mini"
+# set AI model preferences
+model =  "gpt-4o-mini"
+temperature = 0.3 
+max_tokens = 200
+topic = "undergraduate student study abroad budgeting advice"
+
+# generate and set Flask secret key
+app.secret_key = os.urandom(24).hex()
 
 # create connection to sqlite database
 def get_db_connection():
@@ -47,22 +51,14 @@ def create_users_table():
 create_users_table()
 
 #dummy profile data
-submitted_data = {
-    'first_name': 'Jane',
-    'last_name': 'Doe',
-    'email': 'janedoe@example.com',
-    'username': 'janed123',
-    'password': '123456',
-    'home_street': '1234 Park Ln',
-    'home_city': 'New York',
-    'home_country': 'United States'
-}
 
 #dummy category data
 selected = ['Accommodation', 'Food', 'Travel']
 
 #dummy budget data
 percent_left = 75
+
+
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -140,7 +136,7 @@ def homepage():
     conn.close()
 
     if user:
-        full_name = user['fullname']
+        fullname = user['fullname']
         
     else:
         full_name = "Guest"
@@ -156,7 +152,7 @@ def homepage():
         date = expense['date']
         grouped_expenses[date].append(expense)
     
-    return render_template('homepage.html', percent_left=percent_left, full_name=full_name, expenses=grouped_expenses, today=today)
+    return render_template('homepage.html', percent_left=percent_left, fullname=fullname, expenses=grouped_expenses, today=today)
 
 
 def home():
@@ -182,56 +178,57 @@ def expenses():
 
 @app.route('/profile')
 def profile():
+    user_id = session.get('user_id')
     conn = get_db_connection()
-    user = conn.execute(
-        'SELECT fullname, email, username, password, address FROM users WHERE id = ?',
-        (session['user_id'],)
-    ).fetchone()
+    user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
+    
     conn.close()
 
     if user:
         # Split fullname into first and last names
-        full_name = user['fullname'].split(' ', 1)
-        profile_data = {
-            'fullname':full_name,
-            'email': user['email'],
-            'username': user['username'],
-            'password': user['password'],
-            'home_country': user['address'],  # Assuming address is being used as home_country
-        }
+        full_name = user['fullname']
 
-        return render_template('profile.html', data=profile_data, selected=selected)
+        return render_template('profile.html', selected=selected, user=user, full_name=full_name)
     else:
         return redirect(url_for('login'))  # Redirect if user not found
 
-@app.route('/edit_profile')
+@app.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
+    user_id = session.get('user_id')
+    conn = get_db_connection()
+    """cursor = conn.execute("PRAGMA table_info(users);")
+    columns = cursor.fetchall()
+    for column in columns:
+        print(column)"""
     if request.method == 'POST':
         # Capture the form data
         fullname = request.form['fullname']
         email = request.form['email']
         username = request.form['username']
         password = request.form['password']
-        home_country = request.form['address']
+        address = request.form['address']
 
-        # Update the submitted_data dictionary with new values
-        submitted_data['fullname'] = fullname
-        submitted_data['email'] = email
-        submitted_data['username'] = username
-        submitted_data['password'] = password
-        submitted_data['address'] = home_country
+        # test form answers
+        print(f"User ID: {user_id}")
+        print(f"Full Name: {fullname}")
+        print(f"Email: {email}")
+        print(f"Password: {password}")
+        print(f"Address: {address}")
+        
 
         # You would typically also update this in the database
-        conn = get_db_connection()
+        
         conn.execute(
-            'UPDATE users SET fullname = ?, email = ?, username = ?, password = ?, address = ? WHERE id = ?',
-            (f"{fullname}", email, username, password, home_country, session['user_id'])
+            '''UPDATE users SET fullname = ?, email = ?, username = ?, password = ?, address = ? WHERE id = ?''',
+            (fullname, email, username, password, address, user_id)
         )
         conn.commit()
         conn.close()
 
-        return redirect(url_for('homepage'))  # Redirect to profile page after submission
-    return render_template('edit_profile.html', data=submitted_data, selected=selected)
+        return redirect(url_for('profile'))  # Redirect to profile page after submission
+    user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
+    conn.close()
+    return render_template('edit_profile.html', user=user, selected=selected)
 
 
 
@@ -322,18 +319,26 @@ def budget_form_submit():
         city = request.form['city']
         country = request.form['country']
 
-        # insert data into sqlite
-        conn = get_db_connection()
-        cursor = conn.execute('INSERT INTO budget_details (budget, arrival_date, departure_date, city, country, categories, api_output) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            (budget, arrival_date, departure_date, city, country, 'temp', 'temp'))
-        conn.commit()
-        conn.close()
+        # retrieve the user id from the session if logged in
+        user_id = session.get('user_id')
 
-        # store record ID for current session
-        session['budget_id'] = cursor.lastrowid
+        if user_id:
+            # insert user input into sqLite
+            conn = get_db_connection()
+            cursor = conn.execute(
+                'INSERT INTO budget_details (budget, arrival_date, departure_date, city, country, categories, api_output, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                (budget, arrival_date, departure_date, city, country, 'temp', 'temp', user_id)
+            )
+            conn.commit()
+            conn.close()
+            
+            # store the record id for current session
+            session['budget_id'] = cursor.lastrowid
 
-        # after form submission, redirect to budget_category page
-        return redirect(url_for('budget_category'))
+            # After form submission, redirect to budget_category page
+            return redirect(url_for('budget_category'))
+        else:
+            return "Error: User not logged in", 403
 
 @app.route('/budget_category')
 def budget_category():
@@ -348,17 +353,46 @@ def budget_category_submit():
         # concatenate categories into a string
         categories_str = ', '.join(selected_categories)
 
-        # retrieve the budget_id from the session
-        budget_id = session.get('budget_id')
-
+        budget_id = session.get('budget_id') 
         if budget_id:
             conn = get_db_connection()
 
-            # update the categories in the database for the current row
+            # update value in categories column for current row
             conn.execute(
                 'UPDATE budget_details SET categories = ? WHERE id = ?',
                 (categories_str, budget_id)
             )
+
+            # retrieve values in all columns and store in variables
+            budget_row = conn.execute(
+                'SELECT budget, arrival_date, departure_date, city, country FROM budget_details WHERE id = ?',
+                (budget_id,)
+            ).fetchone()
+            budget, arrival_date, departure_date, city, country = budget_row
+
+            # generate prompt using variables
+            prompt = prompts.generate_budget_prompt(budget, arrival_date, departure_date, city, country, categories_str)
+
+            # call OpenAI API with generated prompt
+            response = client.chat.completions.create(
+                model = model,
+                messages = [
+                    {"role": "system", "content": prompts.system_message},
+                    {"role": "user", "content": prompt} 
+                ],
+                temperature = temperature,
+                max_tokens = max_tokens
+            )
+            api_output = response.choices[0].message
+
+            # store API output message in new column in table
+            conn.execute(
+                'UPDATE budget_details SET output = ? WHERE id = ?',
+                (api_output, budget_id)
+            )
+
+            conn.commit()
+            conn.close()
 
             # retrieve values from the database and store them in variables
             budget_row = conn.execute(
@@ -409,13 +443,15 @@ def create_tables():
     conn.execute('''
         CREATE TABLE IF NOT EXISTS budget_details (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
             budget REAL NOT NULL,
             arrival_date TEXT NOT NULL,
             departure_date TEXT NOT NULL,
             city TEXT NOT NULL,
             country TEXT NOT NULL,
             categories TEXT NOT NULL,
-            api_output TEXT NOT NULL
+            api_output TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id)
         );
     ''')
 
@@ -436,44 +472,49 @@ def create_tables():
 
 @app.route('/budget_view')
 def budget_view():
-    budget_id = session.get('budget_id')
+
+    budget_id = session.get('budget_id') 
     if budget_id:
         conn = get_db_connection()
 
         # retrieve budget details along with API output
-        budget_row = conn.execute(
-            'SELECT budget, arrival_date, departure_date, city, country, categories, api_output FROM budget_details WHERE id = ?',
+        budget_details = conn.execute(
+            'SELECT budget, arrival_date, departure_date, city, country, categories, output FROM budget_details WHERE id = ?',
             (budget_id,)
         ).fetchone()
-        
-        if budget_row:
-            budget, arrival_date, departure_date, city, country, categories, api_output = budget_row
-            # pass data to the template
-            return render_template('budget_view.html', budget=budget, arrival_date=arrival_date, 
-                                   departure_date=departure_date, city=city, country=country, categories=categories,
-                                   api_output=api_output)
-        else:
-            # Handle the case where no budget was found for the budget_id
-            return "Budget not found.", 404  # You can return a more user-friendly template or message here
-        
-        conn.close()
-    
-    # Handle the case where no budget_id was found in the session
-    return "No budget ID in session.", 400  # You can return a more user-friendly template or message here
 
-@app.route('/advice')
-def advice():
-    return render_template('advice.html')
+        conn.commit()
+        conn.close()
+
+    budget, arrival_date, departure_date, city, country, categories, api_output = budget_details
+        
+    return render_template('budget_view.html', budget = budget, arrival_date = arrival_date, departure_date = departure_date, 
+        city = city, country = country, categories = categories, api_output = api_output)
+
+@app.route('/log_out')
+def log_out():
+    return render_template('login.html')
 
 @app.route('/currency_converter', methods=['POST'])
 def currency_converter():
+    conn = get_db_connection()
+    user_id = session.get('user_id')
+    user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
+    conn.close()
+
+    if user:
+        fullname = user['fullname']
+        
+    else:
+        fullname = "Guest"
+        
     base_currency = request.form['base_currency'].upper()
     target_currency = request.form['target_currency'].upper()
     amount = float(request.form['amount'])
     print(f"Received: {base_currency}, {target_currency}, Amount: {amount}")
 
-    api_key = '***REMOVED***'  
-    url = f'https://v6.exchangerate-api.com/v6/{api_key}/pair/{base_currency}/{target_currency}'
+    
+    url = f'https://v6.exchangerate-api.com/v6/{exchange_key}/pair/{base_currency}/{target_currency}'
 
     response = requests.get(url)
     converted_amount = None
@@ -490,7 +531,7 @@ def currency_converter():
         error_message = f'API request failed with status code {response.status_code}'
 
     return render_template('homepage.html', converted_amount=converted_amount, amount=amount, 
-                           base_currency=base_currency, target_currency=target_currency, error_message=error_message, first_name=submitted_data['first_name'], last_name=submitted_data['last_name'], percent_left=percent_left)
+                           base_currency=base_currency, target_currency=target_currency, error_message=error_message, percent_left=percent_left, fullname=fullname)
 
 if __name__ == '__main__':
     create_tables()
