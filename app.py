@@ -3,6 +3,7 @@ import os
 import openai
 import requests
 import prompts
+import bcrypt
 from flask import Flask, render_template, request, redirect, url_for, session
 from datetime import datetime
 from collections import defaultdict
@@ -14,6 +15,7 @@ app = Flask(__name__)
 load_dotenv()
 app.secret_key = os.getenv("FLASK_KEY")
 openai.api_key = os.getenv("OPENAI_API_KEY")
+pepper = os.getenv("PEPPER")
 
 # set OpenAI preferences
 client = openai  
@@ -26,24 +28,6 @@ def get_db_connection():
     conn = sqlite3.connect('database.db') 
     conn.row_factory = sqlite3.Row
     return conn
-
-def create_users_table():
-    conn = get_db_connection()
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            fullname TEXT NOT NULL,
-            email TEXT NOT NULL UNIQUE,
-            username TEXT NOT NULL UNIQUE,
-            password TEXT NOT NULL,
-            address TEXT
-        );
-    ''')
-    conn.commit()
-    conn.close()
-
-# Call this function when the app starts
-create_users_table()
 
 #dummy profile data
 submitted_data = {
@@ -63,47 +47,115 @@ selected = ['Accommodation', 'Food', 'Travel']
 #dummy budget data
 percent_left = 75
 
+# create database to store user data
+def create_tables():
+    conn = get_db_connection()
+
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            fullname TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            username TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL,
+            salt TEXT NOT NULL,
+            address TEXT NOT NULL
+        );
+    ''')
+
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS budget_details (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            budget REAL NOT NULL,
+            arrival_date TEXT NOT NULL,
+            departure_date TEXT NOT NULL,
+            city TEXT NOT NULL,
+            country TEXT NOT NULL,
+            categories TEXT NOT NULL,
+            api_output TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        );
+    ''')
+
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS expenses_details (
+            expenseID INTEGER PRIMARY KEY AUTOINCREMENT,
+            budget_id INTEGER NOT NULL,
+            amount TEXT NOT NULL,
+            category TEXT NOT NULL,
+            expenseName TEXT NOT NULL,
+            notes TEXT,
+            date TEXT NOT NULL,
+            FOREIGN KEY (budget_id) REFERENCES budget_details(id)
+        );
+    ''')
+    conn.commit()
+    conn.close()
+
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
 
+        # store username, hashed password, and salt in the database
         conn = get_db_connection()
         user = conn.execute(
-            'SELECT * FROM users WHERE username = ? AND password = ?',
-            (username, password)
+            'SELECT * FROM users WHERE username = ?',
+            (username,)
         ).fetchone()
         conn.close()
 
         if user:
-            session['user_id'] = user['id']
-            return redirect(url_for('homepage'))
-        else:
-            return render_template('login.html', error="Invalid credentials")
+            # retrieve stored hash and salt
+            stored_hashed_password = user['password']
+            stored_salt = user['salt']
 
+            # combine input password with pepper
+            password_with_pepper = password + pepper
+
+            # Hash the combined password with the stored salt
+            is_valid = bcrypt.checkpw(password_with_pepper.encode('utf-8'), stored_hashed_password)
+
+            if is_valid:
+                session['user_id'] = user['id']
+                return redirect(url_for('homepage'))
+            else:
+                return render_template('login.html', error="Invalid credentials") # display error message if incorrect password
     return render_template('login.html')
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
+        # obtain user input from signup form
         fullname = request.form['fullname']
         email = request.form['email']
         username = request.form['username']
         password = request.form['password']
         address = request.form['address']
 
+        # generate a unique salt
+        salt = bcrypt.gensalt()
+
+        # add pepper to the password
+        password_with_pepper = password + pepper
+
+        # hash combined password with salt
+        hashed_password = bcrypt.hashpw(password_with_pepper.encode('utf-8'), salt)
+
+        # store new user info in 'users' table
         conn = get_db_connection()
         try:
             conn.execute(
-                'INSERT INTO users (fullname, email, username, password, address) VALUES (?, ?, ?, ?, ?)',
-                (fullname, email, username, password, address)
+                'INSERT INTO users (fullname, email, username, password, salt, address) VALUES (?, ?, ?, ?, ?, ?)',
+                (fullname, email, username, hashed_password, salt, address)
             )
             conn.commit()
-            return redirect(url_for('login'))  # Redirect to login after signup
+            return redirect(url_for('login')) # redirect to login webpage if account creation successful 
         except sqlite3.IntegrityError:
             error_message = "Username or email already exists."
-            return render_template('login.html', error=error_message, show_signup=True)
+            return render_template('login.html', error=error_message, show_signup=True) # display error message if creation unsuccessful
         finally:
             conn.close()
 
@@ -117,19 +169,26 @@ def forgotPassword():
         confirm_password = request.form['confirm_password']
         
         if new_password != confirm_password:
-            error = "Passwords do not match."
-            return render_template('login.html', error=error, show_forgot_password=True)
+            error_message = "Passwords do not match."
+            return render_template('login.html', error=error_message, show_forgot_password=True)
+        
+        # generate a unique salt
+        salt = bcrypt.gensalt()
+
+        # add pepper to the password
+        password_with_pepper = new_password + pepper
+
+        # hash combined password with salt
+        hashed_password = bcrypt.hashpw(password_with_pepper.encode('utf-8'), salt)
         
         conn = get_db_connection()
-        conn.execute('UPDATE users SET password = ? WHERE username = ?', (new_password, username))
+        conn.execute('UPDATE users SET password = ? WHERE username = ?', (hashed_password, username))
         conn.commit()
         conn.close()
         
         return redirect(url_for('login'))
     
     return render_template('forgotPassword.html')
-
-
 
 @app.route('/homepage')
 def homepage():
@@ -140,18 +199,13 @@ def homepage():
 
     if user:
         full_name = user['fullname']
-        
     else:
         full_name = "Guest"
         
-
-    
     return render_template('homepage.html', percent_left=percent_left, full_name=full_name)
-
 
 def home():
     return render_template('homepage.html')
-
 
 @app.route('/expenses')
 def expenses():
@@ -383,39 +437,6 @@ def budget_category_submit():
         # after form submission, redirect to the budget_view page
         return redirect(url_for('budget_view'))
     
-# create database to store user data
-def create_tables():
-    conn = get_db_connection()
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS budget_details (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL,
-            budget REAL NOT NULL,
-            arrival_date TEXT NOT NULL,
-            departure_date TEXT NOT NULL,
-            city TEXT NOT NULL,
-            country TEXT NOT NULL,
-            categories TEXT NOT NULL,
-            api_output TEXT NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES users(id)
-        );
-    ''')
-
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS expenses_details (
-            expenseID INTEGER PRIMARY KEY AUTOINCREMENT,
-            budget_id INTEGER NOT NULL,
-            amount TEXT NOT NULL,
-            category TEXT NOT NULL,
-            expenseName TEXT NOT NULL,
-            notes TEXT,
-            date TEXT NOT NULL,
-            FOREIGN KEY (budget_id) REFERENCES budget_details(id)
-        );
-    ''')
-    conn.commit()
-    conn.close()
-
 @app.route('/budget_view')
 def budget_view():
     budget_id = session.get('budget_id')
