@@ -7,6 +7,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from datetime import datetime
 from collections import defaultdict
 from dotenv import load_dotenv
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -249,6 +250,7 @@ def addExpense():
         # conn.commit()
         # conn.close()
         
+
         return redirect(url_for('expenses'))
     return render_template('addExpense.html')
 
@@ -258,6 +260,8 @@ def add_expense():
     expenseName = request.form.get('expenseName')
     category = request.form.get('category')
     date = request.form.get('date')
+
+
     notes = request.form.get('notes')
     budgetID = session['user_id']
 
