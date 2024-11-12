@@ -385,7 +385,7 @@ a:visited {
     width: 300px;
     height: 400px;
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
-    padding-top: 100px;
+    padding-top: 10px;
     justify-content: flex-end;
     flex-direction: column;
     color: #1fa2b7;
@@ -408,7 +408,7 @@ a:visited {
 }
 
 .Budget-Bar {
-    padding-top: 100px;
+    padding-top: 10px;
     
     background: #ffff;
     width: 300px;

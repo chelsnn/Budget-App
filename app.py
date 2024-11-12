@@ -7,6 +7,7 @@ import requests
 from openai import OpenAI
 from dotenv import load_dotenv, find_dotenv
 
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -139,10 +140,19 @@ def homepage():
         
     else:
         full_name = "Guest"
-        
 
+    today = datetime.today().strftime('%Y-%m-%d')
+    expenses_data = sorted(
+    sorted(get_expenses(), key=lambda x: x['expenseID'], reverse=True)[:5],
+    key=lambda x: datetime.strptime(x['date'], '%Y-%m-%d'), 
+    reverse=True
+)
+    grouped_expenses = defaultdict(list)
+    for expense in expenses_data:
+        date = expense['date']
+        grouped_expenses[date].append(expense)
     
-    return render_template('homepage.html', percent_left=percent_left, fullname=fullname)
+    return render_template('homepage.html', percent_left=percent_left, fullname=fullname, expenses=grouped_expenses, today=today)
 
 
 def home():
@@ -160,6 +170,11 @@ def expenses():
         date = expense['date']
         grouped_expenses[date].append(expense)
     return render_template('expenses.html', expenses=grouped_expenses, today=today)
+
+
+ #sorts expenses in backwards order to ensure display is in order
+    
+
 
 @app.route('/profile')
 def profile():
@@ -232,6 +247,7 @@ def addExpense():
         # conn.commit()
         # conn.close()
         
+
         return redirect(url_for('expenses'))
     return render_template('addExpense.html')
 
@@ -241,6 +257,8 @@ def add_expense():
     expenseName = request.form.get('expenseName')
     category = request.form.get('category')
     date = request.form.get('date')
+
+
     notes = request.form.get('notes')
     budgetID = session['user_id']
 
