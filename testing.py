@@ -74,3 +74,28 @@ async def test_signup():
         await browser.close()
 
 
+
+@pytest.mark.asyncio
+async def test_expenses(): #and that login from sign up works
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=False)
+        page = await browser.new_page()
+        await page.goto("http://127.0.0.1:5000/")
+
+
+        # Check if the element with class 'logo' and text 'StudentSpender' is visible
+        await expect(page.locator("h1.logo", has_text="StudentSpender")).to_be_visible()
+        await page.locator("a", has_text="Sign up").click()
+        await page.locator("a", has_text="Login").click()
+        await page.fill("input#username", "testuser")  # Adjust selector if necessary
+        await page.fill("input#password", "hi")  # Adjust selector if necessary
+        await page.locator(".primary-btn", has_text="Login").click()
+        await expect(page.locator("h1.welc", has_text="Welcome Back")).to_be_visible()
+        await page.locator("a", has_text="Expenses").click()
+        await expect(page.locator("h1.expenses-title", has_text="Expenses")).to_be_visible()
+        await page.locator("button.add-button", has_text="Add Expense").click() 
+        await expect(page.locator("h1", has_text="Add Expense")).to_be_visible()
+        
+        
+        await browser.close()
+
