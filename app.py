@@ -6,12 +6,10 @@ import openai
 import requests
 import bcrypt
 from flask import Flask, render_template, request, redirect, url_for, session
-from flask_sqlalchemy import SQLAlchemy
-import requests
-import openai
-# from openai import OpenAI
-from dotenv import load_dotenv, find_dotenv
 
+import requests
+from openai import OpenAI
+from dotenv import load_dotenv
 from datetime import datetime
 from collections import defaultdict
 
@@ -20,7 +18,7 @@ app = Flask(__name__)
 # set keys
 load_dotenv()
 app.secret_key = os.getenv("FLASK_KEY")
-openai.api_key = os.getenv("OPENAI_API_KEY")
+OpenAI.api_key = os.getenv("OPENAI_API_KEY")
 exchange_key = os.getenv("xchange_key")
 pepper = os.getenv("PEPPER")
 
@@ -208,21 +206,10 @@ def homepage():
         fullname = user['fullname']
     else:
         fullname = "Guest"
-
-    today = datetime.today().strftime('%Y-%m-%d')
-    expenses_data = sorted(
-    sorted(get_expenses(), key=lambda x: x['expenseID'], reverse=True)[:5],
-    key=lambda x: datetime.strptime(x['date'], '%Y-%m-%d'), 
-    reverse=True
-)
-    grouped_expenses = defaultdict(list)
-    for expense in expenses_data:
-        formatted_date = datetime.strptime(expense['date'], '%Y-%m-%d')  # Adjust format as necessary
-        date = formatted_date.strftime('%m-%d-%Y')
-        grouped_expenses[date].append(expense)
-    today = datetime.today().strftime('%m-%d-%Y')
         
-    return render_template('homepage.html', percent_left=percent_left, fullname=fullname, expenses=grouped_expenses, today=today)
+
+    
+    return render_template('homepage.html', percent_left=percent_left, fullname=fullname)
 
 
 def home():
