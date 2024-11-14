@@ -6,10 +6,8 @@ import openai
 import requests
 import bcrypt
 from flask import Flask, render_template, request, redirect, url_for, session
-from flask_sqlalchemy import SQLAlchemy
 import requests
 import openai
-# from openai import OpenAI
 from dotenv import load_dotenv, find_dotenv
 
 from datetime import datetime
@@ -117,7 +115,6 @@ def login():
         if user:
             # retrieve stored hash and salt
             stored_hashed_password = user['password']
-            stored_salt = user['salt']
 
             # combine input password with pepper
             password_with_pepper = password + pepper
@@ -125,11 +122,15 @@ def login():
             # Hash the combined password with the stored salt
             is_valid = bcrypt.checkpw(password_with_pepper.encode('utf-8'), stored_hashed_password)
 
+        
             if is_valid:
                 session['user_id'] = user['id']
                 return redirect(url_for('homepage'))
+                
             else:
                 return render_template('login.html', error="Invalid credentials") # display error message if incorrect password
+            
+        return render_template('login.html', error="Invalid credentials")
     return render_template('login.html')
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -146,7 +147,7 @@ def signup():
         salt = bcrypt.gensalt()
 
         # add pepper to the password
-        password_with_pepper = password + pepper
+        password_with_pepper = password + salt.decode('utf-8') + pepper  # Combine salt and pepper with password
 
         # hash combined password with salt
         hashed_password = bcrypt.hashpw(password_with_pepper.encode('utf-8'), salt)
@@ -208,7 +209,7 @@ def homepage():
         fullname = user['fullname']
         
     else:
-        full_name = "Guest"
+        fullname = "Guest"
 
     today = datetime.today().strftime('%Y-%m-%d')
     expenses_data = sorted(
