@@ -219,20 +219,6 @@ h1 {
     margin-bottom: 20px;
 }
     
-
-
-.checkbox {
-    display: block;
-    margin-top: 10px;
-    padding: 10px;
-
-    margin-bottom: 10px;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-}
-
-
 /*Profile Page CSS end*/
 
 
@@ -395,10 +381,8 @@ a:visited {
 .boxes, .curr-rates{
     flex-direction: row;
     align-items: center;
-    
     display: flex;
     justify-content: center; 
-    /* space-between; */
 }
 
 .Budget-Bar, .welc {
@@ -504,7 +488,23 @@ body {
     max-width: 800px;
 }
 
+/* BUDGET WEBPAGES START*/
 
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.checkbox {
+    display: block;
+    margin-top: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
 
 .checkbox-group {
     display: flex; 
@@ -529,6 +529,8 @@ body {
     margin-right: 15px;    
     text-align: center;     
 }
+
+/* BUDGET WEBPAGES END */
 
 .icon {
     width: 40px;

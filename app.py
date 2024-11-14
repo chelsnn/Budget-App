@@ -366,6 +366,19 @@ def budget_form_submit():
         city = request.form['city']
         country = request.form['country']
 
+        # simple validation checks
+        error = None
+        if not budget.isdigit():
+            error = "Budget must be a numeric value."
+        elif not arrival_date or not departure_date:
+            error = "Both arrival and departure dates are required."
+        elif not city or not country:
+            error = "City and country are required."
+
+        # if user input invalid, render budget_form again with the error message
+        if error:
+            return render_template('budget_form.html', error=error)
+
         # retrieve the user id from the session if logged in
         user_id = session.get('user_id')
 
@@ -417,6 +430,14 @@ def budget_category_submit():
             ).fetchone()
 
             if budget_row:
+                # if OpenAI API key not active, store error message into ai_output column of budget_details table
+                if not openai.api_key or openai.api_key == "placeholder":
+                    error_message = "Sorry, our OpenAI API is currently unavailable."
+                    conn.execute(
+                        'UPDATE budget_details SET api_output = ? WHERE id = ?', (error_message, budget_id)
+                    )
+                    return redirect(url_for('budget_view'))
+
                 budget, arrival_date, departure_date, city, country = budget_row
 
                 # generate prompt using the variables
@@ -435,9 +456,6 @@ def budget_category_submit():
 
                 # retrieve the API output as plain text
                 api_output = response.choices[0].message.content
-
-                # debugging output: print the API response
-                print("API Output:", api_output)
 
                 # store the API output message in the database
                 conn.execute(
