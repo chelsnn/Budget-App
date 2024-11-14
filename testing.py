@@ -304,7 +304,7 @@ async def test_expensesCategories(): #checks that all expenses categories can be
         await browser.close()
 
 @pytest.mark.asyncio
-async def test_budget_form1(): # ensure AI output is displayed on 
+async def test_budget_form1(): # ensure AI output is displayed on budget_view webpage
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=False)
         page = await browser.new_page()
