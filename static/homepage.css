@@ -70,11 +70,9 @@
 
 label {
     margin-bottom: 10px;
-    margin-top: 20px;
-    
-    
-
+    margin-top: 20px; 
 }
+
 .form_inputs{
     margin-bottom: 20px;
     padding: 8px;
@@ -208,7 +206,7 @@ h1 {
 }
 
 .edit_pfp, .submit{
-    margin-top: 10px;
+    margin-top: 20px;
     padding: 10px 20px;
     background-color: #1fa2b7;
     color: white;
@@ -510,7 +508,7 @@ body {
 
 .checkbox-group {
     display: flex; 
-    flex-direction: column; 
+    flex-direction: row; 
     align-items: flex-start; 
 }
 
@@ -528,7 +526,7 @@ body {
 .category-option {
     display: flex;
     align-items: center;    
-    margin-bottom: 15px;    
+    margin-right: 15px;    
     text-align: center;     
 }
 
