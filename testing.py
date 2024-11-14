@@ -2,6 +2,32 @@ import pytest
 from playwright.async_api import async_playwright, expect
 
 @pytest.mark.asyncio
+async def test_signup(): #signup with new account
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=False)
+        page = await browser.new_page()
+        await page.goto("http://127.0.0.1:5000/")
+
+        # Check if the element with class 'logo' and text 'StudentSpender' is visible
+        await expect(page.locator("h1.logo", has_text="StudentSpender")).to_be_visible()
+
+        await page.locator("a", has_text="Sign up").click()
+        await page.fill("input[name='fullname']", "test test")  # Full Name field
+        await page.fill("input[name='email']", "clarissachen5@gmail.com")  # Email field
+        await page.fill("input[name='username']", "hi")  # Username field
+        await page.fill("input[name='password']", "hi")  # Password field
+        await page.fill("input[name='address']", "USA")  # Home Country field
+        await page.locator(".primary-btn", has_text="Sign Up").click()
+        await page.fill("input#username", "hi")  # Adjust selector if necessary
+        await page.fill("input#password", "hi")  # Adjust selector if necessary
+        await page.locator(".primary-btn", has_text="Login").click()
+        await expect(page.locator("h1.welc", has_text="Welcome Back")).to_be_visible()
+
+        await browser.close()
+
+
+
+@pytest.mark.asyncio
 async def test_login(): #normal sign in
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=False)
@@ -49,31 +75,6 @@ async def test_home(): #homepage elements exist
 
         await browser.close()
 
-@pytest.mark.asyncio
-async def test_signup(): #signup with new account
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False)
-        page = await browser.new_page()
-        await page.goto("http://127.0.0.1:5000/")
-
-        # Check if the element with class 'logo' and text 'StudentSpender' is visible
-        await expect(page.locator("h1.logo", has_text="StudentSpender")).to_be_visible()
-
-        await page.locator("a", has_text="Sign up").click()
-        await page.fill("input[name='fullname']", "test test")  # Full Name field
-        await page.fill("input[name='email']", "clarissachen5@gmail.com")  # Email field
-        await page.fill("input[name='username']", "testuser")  # Username field
-        await page.fill("input[name='password']", "hi")  # Password field
-        await page.fill("input[name='address']", "USA")  # Home Country field
-        await page.locator(".primary-btn", has_text="Sign Up").click()
-        await page.fill("input#username", "testuser")  # Adjust selector if necessary
-        await page.fill("input#password", "hi")  # Adjust selector if necessary
-        await page.locator(".primary-btn", has_text="Login").click()
-        await expect(page.locator("h1.welc", has_text="Welcome Back")).to_be_visible()
-
-        await browser.close()
-
-
 
 @pytest.mark.asyncio
 async def test_expenses(): #add expense and that login from sign up works
@@ -87,7 +88,7 @@ async def test_expenses(): #add expense and that login from sign up works
         await expect(page.locator("h1.logo", has_text="StudentSpender")).to_be_visible()
         await page.locator("a", has_text="Sign up").click()
         await page.locator("a", has_text="Login").click()
-        await page.fill("input#username", "testuser")  # Adjust selector if necessary
+        await page.fill("input#username", "hi")  # Adjust selector if necessary
         await page.fill("input#password", "hi")  # Adjust selector if necessary
         await page.locator(".primary-btn", has_text="Login").click()
         await expect(page.locator("h1.welc", has_text="Welcome Back")).to_be_visible()
@@ -97,12 +98,16 @@ async def test_expenses(): #add expense and that login from sign up works
         await expect(page.locator("h1", has_text="Add Expense")).to_be_visible()
         await page.fill("input[name='amount']", "33")
         await page.fill("input[name='expenseName']", "Testing")
-        # await page.locator("input[type='radio'][value='Food']").check()
-        # await page.fill("input[name='date']", "11/12/2024")
-        # await page.fill("input[name='notes']", "Testing notes")
-        # await page.locator("button", has_text="Add").click()
-        # await expect(page.locator("h1.expenses-title", has_text="Expenses")).to_be_visible()
-        
-        
+        await page.locator('input[type="radio"][value="travel"]').check()
+        await page.locator('input[type="date"]').fill('2024-12-25')
+        await page.fill("input[name='notes']", "test test test")
+        await page.locator("button", has_text="Add").click()
+        await expect(page.locator("h1.expenses-title", has_text="Expenses")).to_be_visible()
+        await expect(page.locator("p.expense-title", has_text="Testing")).to_be_visible()
+        await page.locator("button", has_text="Delete").click()
+        count = await page.locator("h1.expenses-title", has_text="2024-12-25").count()
+        assert count == 0, "Expected no elements with the text 'Expenses' to be visible"
+
+                
         await browser.close()
 
