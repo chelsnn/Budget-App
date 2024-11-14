@@ -1,10 +1,12 @@
+from collections import defaultdict
 import sqlite3
 import os
 import prompts
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 import requests
-from openai import OpenAI
+import openai
+# from openai import OpenAI
 from dotenv import load_dotenv, find_dotenv
 
 from datetime import datetime
