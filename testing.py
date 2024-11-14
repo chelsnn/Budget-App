@@ -130,7 +130,7 @@ async def test_expenses(): #add expense and that login from sign up works
         await expect(page.locator("h1.expenses-title", has_text="Expenses")).to_be_visible()
         await expect(page.locator("p.expense-title", has_text="Testing")).to_be_visible()
         await page.locator("button", has_text="Delete").click()
-        count = await page.locator("h1.expenses-title", has_text="2024-12-25").count()
+        count = await page.locator("h1.expenses-title", has_text="12-25-2024").count()
         assert count == 0, "Expected no elements with the text 'Expenses' to be visible"
                 
         await browser.close()
@@ -164,6 +164,7 @@ async def test_todayExpenses(): #checks that Today shows rather than date
         await page.locator("button", has_text="Add").click()
         await expect(page.locator("h1.expenses-title", has_text="Expenses")).to_be_visible()
         await expect(page.locator("p.expense-title", has_text="Testing")).to_be_visible()
+        today = datetime.today().strftime('%m-%d-%Y')
         count = await page.locator("h1.expenses-title", has_text=today).count()
         assert count == 0, "Expected no elements with the text 'Expenses' to be visible"
         await expect(page.locator("h1", has_text="Today")).to_be_visible()
@@ -201,6 +202,7 @@ async def test_expensesCategories(): #checks that all expenses categories can be
         await page.locator("button", has_text="Add").click()
         await expect(page.locator("h1.expenses-title", has_text="Expenses")).to_be_visible()
         await expect(page.locator("p.expense-title", has_text="category test")).to_be_visible()
+        today = datetime.today().strftime('%m-%d-%Y')
         count = await page.locator("h1.expenses-title", has_text=today).count()
         assert count == 0, "Expected no elements with the text 'Expenses' to be visible"
         await expect(page.locator("h1", has_text="Today")).to_be_visible()
@@ -218,6 +220,7 @@ async def test_expensesCategories(): #checks that all expenses categories can be
         await page.locator("button", has_text="Add").click()
         await expect(page.locator("h1.expenses-title", has_text="Expenses")).to_be_visible()
         await expect(page.locator("p.expense-title", has_text="category test")).to_be_visible()
+        today = datetime.today().strftime('%m-%d-%Y')
         count = await page.locator("h1.expenses-title", has_text=today).count()
         assert count == 0, "Expected no elements with the text 'Expenses' to be visible"
         await expect(page.locator("h1", has_text="Today")).to_be_visible()
@@ -235,6 +238,7 @@ async def test_expensesCategories(): #checks that all expenses categories can be
         await page.locator("button", has_text="Add").click()
         await expect(page.locator("h1.expenses-title", has_text="Expenses")).to_be_visible()
         await expect(page.locator("p.expense-title", has_text="category test")).to_be_visible()
+        today = datetime.today().strftime('%m-%d-%Y')
         count = await page.locator("h1.expenses-title", has_text=today).count()
         assert count == 0, "Expected no elements with the text 'Expenses' to be visible"
         await expect(page.locator("h1", has_text="Today")).to_be_visible()
@@ -252,6 +256,7 @@ async def test_expensesCategories(): #checks that all expenses categories can be
         await page.locator("button", has_text="Add").click()
         await expect(page.locator("h1.expenses-title", has_text="Expenses")).to_be_visible()
         await expect(page.locator("p.expense-title", has_text="category test")).to_be_visible()
+        today = datetime.today().strftime('%m-%d-%Y')
         count = await page.locator("h1.expenses-title", has_text=today).count()
         assert count == 0, "Expected no elements with the text 'Expenses' to be visible"
         await expect(page.locator("h1", has_text="Today")).to_be_visible()
@@ -270,6 +275,7 @@ async def test_expensesCategories(): #checks that all expenses categories can be
         await page.locator("button", has_text="Add").click()
         await expect(page.locator("h1.expenses-title", has_text="Expenses")).to_be_visible()
         await expect(page.locator("p.expense-title", has_text="category test")).to_be_visible()
+        today = datetime.today().strftime('%m-%d-%Y')
         count = await page.locator("h1.expenses-title", has_text=today).count()
         assert count == 0, "Expected no elements with the text 'Expenses' to be visible"
         await expect(page.locator("h1", has_text="Today")).to_be_visible()
@@ -288,6 +294,7 @@ async def test_expensesCategories(): #checks that all expenses categories can be
         await page.locator("button", has_text="Add").click()
         await expect(page.locator("h1.expenses-title", has_text="Expenses")).to_be_visible()
         await expect(page.locator("p.expense-title", has_text="category test")).to_be_visible()
+        today = datetime.today().strftime('%m-%d-%Y')
         count = await page.locator("h1.expenses-title", has_text=today).count()
         assert count == 0, "Expected no elements with the text 'Expenses' to be visible"
         await expect(page.locator("h1", has_text="Today")).to_be_visible()
