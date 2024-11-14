@@ -151,9 +151,11 @@ def homepage():
 )
     grouped_expenses = defaultdict(list)
     for expense in expenses_data:
-        date = expense['date']
+        formatted_date = datetime.strptime(expense['date'], '%Y-%m-%d')  # Adjust format as necessary
+        date = formatted_date.strftime('%m-%d-%Y')
         grouped_expenses[date].append(expense)
-    
+    today = datetime.today().strftime('%m-%d-%Y')
+        
     return render_template('homepage.html', percent_left=percent_left, fullname=fullname, expenses=grouped_expenses, today=today)
 
 
@@ -169,8 +171,11 @@ def expenses():
     #creates a dictionary with dates as keys to display expenses by date
     grouped_expenses = defaultdict(list)
     for expense in expenses_data:
-        date = expense['date']
+        formatted_date = datetime.strptime(expense['date'], '%Y-%m-%d')  # Adjust format as necessary
+        date = formatted_date.strftime('%m-%d-%Y')
         grouped_expenses[date].append(expense)
+
+    today = datetime.today().strftime('%m-%d-%Y')
     return render_template('expenses.html', expenses=grouped_expenses, today=today)
 
 
