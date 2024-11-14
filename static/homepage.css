@@ -142,7 +142,7 @@ button {
 .modhead {
     
     height: 500px;
-    
+
 }
 
 h1 {
@@ -399,7 +399,8 @@ a:visited {
     align-items: center;
     
     display: flex;
-    justify-content: space-between;
+    justify-content: center; 
+    /* space-between; */
 }
 
 .Budget-Bar, .welc {
