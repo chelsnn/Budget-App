@@ -147,7 +147,7 @@ def signup():
         salt = bcrypt.gensalt()
 
         # add pepper to the password
-        password_with_pepper = password + salt.decode('utf-8') + pepper  # Combine salt and pepper with password
+        password_with_pepper = password + pepper
 
         # hash combined password with salt
         hashed_password = bcrypt.hashpw(password_with_pepper.encode('utf-8'), salt)
