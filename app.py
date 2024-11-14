@@ -207,7 +207,6 @@ def homepage():
 
     if user:
         fullname = user['fullname']
-        
     else:
         fullname = "Guest"
 
@@ -302,12 +301,6 @@ def edit_profile():
     conn.close()
     return render_template('edit_profile.html', user=user, selected=selected)
 
-
-
-# @app.route('/homepage')
-# def homepage():
-#     return render_template('homepage.html')
-    
 @app.route('/addExpense', methods=['GET', 'POST'])
 def addExpense():
     if request.method == 'POST':
@@ -358,24 +351,6 @@ def get_expenses():
     expenses = cursor.fetchall()
     conn.close()
     return expenses
-
-
-@app.route('/budget')
-def budget():
-    return render_template('budget.html')
-
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     if request.method == 'POST':
-#         username = request.form['username']
-#         password = request.form['password']
-
-#         # Add authentication logic here
-#         # if username == 'admin' and password == 'password':  # Dummy check
-#         #     return redirect(url_for('homepage'))
-#         # else:
-#         #     return "Invalid credentials, please try again."
-#     return render_template('login.html')
 
 @app.route('/budget_form')
 def budget_form():
@@ -516,6 +491,27 @@ def currency_converter():
     amount = float(request.form['amount'])
     print(f"Received: {base_currency}, {target_currency}, Amount: {amount}")
 
+    # obtain current user's name to render homepage template
+    conn = get_db_connection()
+    user_id = session.get('user_id')
+    user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
+    conn.close()
+
+    # obtain current user's expenses to render homepage template
+    expenses_data = sorted(
+    sorted(get_expenses(), key=lambda x: x['expenseID'], reverse=True)[:5],
+    key=lambda x: datetime.strptime(x['date'], '%Y-%m-%d'), 
+    reverse=True
+)  
+    grouped_expenses = defaultdict(list)
+    for expense in expenses_data:
+        date = expense['date']
+        grouped_expenses[date].append(expense)
+
+    if user:
+        fullname = user['fullname']
+    else:
+        fullname = "Guest"
     
     url = f'https://v6.exchangerate-api.com/v6/{exchange_key}/pair/{base_currency}/{target_currency}'
 
@@ -534,7 +530,8 @@ def currency_converter():
         error_message = f'API request failed with status code {response.status_code}'
 
     return render_template('homepage.html', converted_amount=converted_amount, amount=amount, 
-                           base_currency=base_currency, target_currency=target_currency, error_message=error_message, percent_left=percent_left, fullname=fullname)
+                           base_currency=base_currency, target_currency=target_currency, error_message=error_message, 
+                           percent_left=percent_left, fullname=fullname, expenses=grouped_expenses)
 
 if __name__ == '__main__':
     create_tables()
