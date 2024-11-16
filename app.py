@@ -17,7 +17,6 @@ from collections import defaultdict
 
 app = Flask(__name__)
 
-
 # set keys
 load_dotenv()
 app.secret_key = os.getenv("FLASK_KEY")
