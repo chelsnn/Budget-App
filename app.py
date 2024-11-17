@@ -2,8 +2,7 @@ from collections import defaultdict
 import sqlite3
 import os
 import prompts
-import openai
-import requests
+
 import bcrypt
 from flask import Flask, render_template, request, redirect, url_for, session
 import requests
@@ -34,23 +33,8 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-#dummy profile data
-submitted_data = {
-    'first_name': 'Jane',
-    'last_name': 'Doe',
-    'email': 'janedoe@example.com',
-    'username': 'janed123',
-    'password': '123456',
-    'home_street': '1234 Park Ln',
-    'home_city': 'New York',
-    'home_country': 'United States'
-}
 
-#dummy category data
-selected = ['Accommodation', 'Food', 'Travel']
 
-#dummy budget data
-percent_left = 75
 
 # create database to store user data
 def create_tables():
@@ -200,30 +184,44 @@ def forgotPassword():
 
 @app.route('/homepage')
 def homepage():
-    conn = get_db_connection()
-    user_id = session.get('user_id')
-    user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
-    conn.close()
+   conn = get_db_connection()
+   user_id = session.get('user_id')
+   user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
+   conn.close()
 
-    if user:
-        fullname = user['fullname']
-    else:
-        fullname = "Guest"
 
-    today = datetime.today().strftime('%Y-%m-%d')
-    expenses_data = sorted(
-    sorted(get_expenses(), key=lambda x: x['expenseID'], reverse=True)[:5],
-    key=lambda x: datetime.strptime(x['date'], '%Y-%m-%d'), 
-    reverse=True
+   if user:
+       fullname = user['fullname']
+   else:
+       fullname = "Guest"
+
+
+   remaining_budget, total_budget, percent_left = calculate_budget_left()
+   total_budget = round(total_budget, 2)
+   remaining_budget = round(remaining_budget, 2)
+   percent_left = round(percent_left, 2)
+
+
+   today = datetime.today().strftime('%Y-%m-%d')
+   expenses_data = sorted(
+   sorted(get_expenses(), key=lambda x: x['expenseID'], reverse=True)[:5],
+   key=lambda x: datetime.strptime(x['date'], '%Y-%m-%d'),
+   reverse=True
 )
-    grouped_expenses = defaultdict(list)
-    for expense in expenses_data:
-        formatted_date = datetime.strptime(expense['date'], '%Y-%m-%d')  # Adjust format as necessary
-        date = formatted_date.strftime('%m-%d-%Y')
-        grouped_expenses[date].append(expense)
-    today = datetime.today().strftime('%m-%d-%Y')
-        
-    return render_template('homepage.html', percent_left=percent_left, fullname=fullname, expenses=grouped_expenses, today=today)
+   grouped_expenses = defaultdict(list)
+   for expense in expenses_data:
+       formatted_date = datetime.strptime(expense['date'], '%Y-%m-%d')  # Adjust format as necessary
+       date = formatted_date.strftime('%m-%d-%Y')
+       grouped_expenses[date].append(expense)
+
+
+   today = datetime.today().strftime('%m-%d-%Y')
+      
+   return render_template('homepage.html', percent_left=percent_left, fullname=fullname, expenses=grouped_expenses, today=today)
+
+
+
+
 
 
 def home():
@@ -550,6 +548,41 @@ def currency_converter():
     return render_template('homepage.html', converted_amount=converted_amount, amount=amount, 
                            base_currency=base_currency, target_currency=target_currency, error_message=error_message, 
                            percent_left=percent_left, fullname=fullname, expenses=grouped_expenses)
+
+@app.route('/calculate_budget_left')
+def calculate_budget_left():
+   user_id = session.get('user_id') 
+   if not user_id:
+       return {"error": "User not logged in"}, 400  # Handle the case where user_id is missing
+
+
+   conn = get_db_connection()
+  
+   budget_data = conn.execute(
+       'SELECT budget FROM budget_details WHERE user_id = ?', (user_id,)
+   ).fetchone()
+   total_budget = budget_data[0] if budget_data else 0  # Access by index
+
+
+   expenses_data = conn.execute(
+       'SELECT SUM(amount) AS total_expenses FROM expenses_details'
+   ).fetchone()
+   total_expenses = expenses_data[0] if expenses_data and expenses_data[0] else 0  # Access by index
+   conn.close()
+  
+   remaining_budget = total_budget - total_expenses
+   if total_budget > 0:
+       percent_left = (remaining_budget / total_budget) * 100
+   else:
+       percent_left = 0
+   return remaining_budget, total_budget, percent_left
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     create_tables()
