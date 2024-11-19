@@ -297,7 +297,7 @@ def edit_profile():
         return redirect(url_for('profile'))  # Redirect to profile page after submission
     user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
     conn.close()
-    return render_template('edit_profile.html', user=user, selected=selected)
+    return render_template('edit_profile.html', user=user)
 
 @app.route('/addExpense', methods=['GET', 'POST'])
 def addExpense():
