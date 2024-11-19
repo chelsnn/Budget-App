@@ -562,11 +562,11 @@ def calculate_budget_left():
        'SELECT budget FROM budget_details WHERE user_id = ?', (user_id,)
    ).fetchone()
    total_budget = budget_data[0] if budget_data else 0  # Access by index
-
-
+   
    expenses_data = conn.execute(
-       'SELECT SUM(amount) AS total_expenses FROM expenses_details'
-   ).fetchone()
+        'SELECT SUM(amount) AS total_expenses FROM expenses_details WHERE budget_id = ?',
+        (user_id,)
+    ).fetchone()
    total_expenses = expenses_data[0] if expenses_data and expenses_data[0] else 0  # Access by index
    conn.close()
   
