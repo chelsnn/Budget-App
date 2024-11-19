@@ -255,9 +255,9 @@ def profile():
 
     if user:
         # Split fullname into first and last names
-        full_name = user['fullname']
+        fullname = user['fullname']
 
-        return render_template('profile.html', selected=selected, user=user, full_name=full_name)
+        return render_template('profile.html', user=user, fullname=fullname)
     else:
         return redirect(url_for('login'))  # Redirect if user not found
 
@@ -297,7 +297,7 @@ def edit_profile():
         return redirect(url_for('profile'))  # Redirect to profile page after submission
     user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
     conn.close()
-    return render_template('edit_profile.html', user=user, selected=selected)
+    return render_template('edit_profile.html', user=user)
 
 @app.route('/addExpense', methods=['GET', 'POST'])
 def addExpense():
