@@ -255,9 +255,9 @@ def profile():
 
     if user:
         # Split fullname into first and last names
-        full_name = user['fullname']
+        fullname = user['fullname']
 
-        return render_template('profile.html', selected=selected, user=user, full_name=full_name)
+        return render_template('profile.html', user=user, fullname=fullname)
     else:
         return redirect(url_for('login'))  # Redirect if user not found
 
