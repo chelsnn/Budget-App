@@ -513,6 +513,8 @@ def currency_converter():
     user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
     conn.close()
 
+    remaining_budget, total_budget, percent_left = calculate_budget_left()
+
     # obtain current user's expenses to render homepage template
     expenses_data = sorted(
     sorted(get_expenses(), key=lambda x: x['expenseID'], reverse=True)[:5],
