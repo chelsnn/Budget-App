@@ -255,9 +255,9 @@ def profile():
 
     if user:
         # Split fullname into first and last names
-        full_name = user['fullname']
+        fullname = user['fullname']
 
-        return render_template('profile.html', selected=selected, user=user, full_name=full_name)
+        return render_template('profile.html', user=user, fullname=fullname)
     else:
         return redirect(url_for('login'))  # Redirect if user not found
 
@@ -297,7 +297,7 @@ def edit_profile():
         return redirect(url_for('profile'))  # Redirect to profile page after submission
     user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
     conn.close()
-    return render_template('edit_profile.html', user=user, selected=selected)
+    return render_template('edit_profile.html', user=user)
 
 @app.route('/addExpense', methods=['GET', 'POST'])
 def addExpense():
@@ -513,6 +513,8 @@ def currency_converter():
     user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
     conn.close()
 
+    remaining_budget, total_budget, percent_left = calculate_budget_left()
+
     # obtain current user's expenses to render homepage template
     expenses_data = sorted(
     sorted(get_expenses(), key=lambda x: x['expenseID'], reverse=True)[:5],
@@ -562,11 +564,11 @@ def calculate_budget_left():
        'SELECT budget FROM budget_details WHERE user_id = ?', (user_id,)
    ).fetchone()
    total_budget = budget_data[0] if budget_data else 0  # Access by index
-
-
+   
    expenses_data = conn.execute(
-       'SELECT SUM(amount) AS total_expenses FROM expenses_details'
-   ).fetchone()
+        'SELECT SUM(amount) AS total_expenses FROM expenses_details WHERE budget_id = ?',
+        (user_id,)
+    ).fetchone()
    total_expenses = expenses_data[0] if expenses_data and expenses_data[0] else 0  # Access by index
    conn.close()
   

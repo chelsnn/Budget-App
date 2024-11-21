@@ -34,58 +34,11 @@
 
             <label for="address">Address</label> 
             <input class="form_inputs" type="text" id="address" name="address" value="{{ user['address'] }}" ><br><br>
-
             
-            <div class="spend_cats">
-                <h2 class="spend_form">Spending Categories</h2>
-                <form id="spending-categories">
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" name="cats" value="Accommodation"
-                        {% if 'Accommodation' in selected %}checked{% endif %}>
-                            Accommodation
-                    </label>
-    
-    
-                    <label>
-                        <input type="checkbox" name="cats" value="Food"
-                        {% if 'Food' in selected %}checked{% endif %}>
-                            Food
-                    </label>
-    
-    
-                    <label>
-                        <input type="checkbox" name="cats" value="Travel"
-                        {% if 'Travel' in selected %}checked{% endif %}>
-                            Travel
-                    </label>
-    
-    
-                    <label>
-                        <input type="checkbox" name="cats" value="Entertainment"
-                        {% if 'Entertainment' in selected %}checked{% endif %}>
-                            Entertainment
-                    </label>
-    
-                    <label>
-                        <input type="checkbox" name="cats" value="Shopping"
-                        {% if 'Shopping' in selected %}checked{% endif %}>
-                            Shopping
-                    </label>
-    
-                    <label>
-                        <input type="checkbox" name="cats" value="Miscellaneous"
-                       {% if 'Miscellaneous' in selected %}checked{% endif %}> 
-                            Miscellaneous
-                    </label>
-    
-    
-                </div>
-                <div class="submit">
-                    <button type="submit" class="submit" onclick=location.href="{{ url_for('profile') }}">Submit Changes</button>
-        
-                </div>
-                </form>
+            <div class="submit">
+                <button type="submit" class="submit" onclick=location.href="{{ url_for('profile') }}">Submit Changes</button>
+            </div>
+               
             </div>
     
                 
